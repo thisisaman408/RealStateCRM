@@ -45,5 +45,5 @@ COPY --from=installer /app/apps/api ./apps/api
 COPY --from=installer /app/apps/workers ./apps/workers
 COPY --from=installer /app/package.json ./package.json
 
-# Start API in background (uses Render's PORT), start Workers in foreground on a different port
-CMD ["sh", "-c", "cd packages/prisma && npx prisma db push --accept-data-loss && npx tsx seed.ts --if-empty && cd ../../ && node apps/api/dist/main & PORT=3334 node apps/workers/dist/main"]
+# Start API in foreground (uses Render's PORT), start Workers in background (delayed) so Render detects API port first
+CMD ["sh", "-c", "cd packages/prisma && npx prisma db push --accept-data-loss && npx tsx seed.ts --if-empty && cd ../../ && (sleep 3 && PORT=3334 node apps/workers/dist/main) & node apps/api/dist/main"]
