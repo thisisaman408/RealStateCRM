@@ -1,0 +1,49 @@
+# =============================================================
+# Combined Render Dockerfile — API & Workers
+# =============================================================
+
+FROM node:22-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
+RUN npm install -g turbo
+RUN apk add --no-cache libc6-compat openssl
+
+# ── Stage 1: Prune ─────────────────────────────────────────────
+FROM base AS builder
+WORKDIR /app
+COPY . .
+# Extract only the packages/apps needed for both API and Workers
+RUN turbo prune @resyl/api @resyl/workers --docker
+
+# ── Stage 2: Install & Build ───────────────────────────────────
+FROM base AS installer
+WORKDIR /app
+
+COPY .gitignore .gitignore
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+
+RUN pnpm install --frozen-lockfile --ignore-scripts
+
+COPY --from=builder /app/out/full/ .
+COPY turbo.json turbo.json
+
+RUN pnpm --filter @resyl/prisma db:generate
+RUN pnpm turbo run build --filter=@resyl/api... --filter=@resyl/workers...
+
+# ── Stage 3: Production Image ──────────────────────────────────
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=installer /app/node_modules ./node_modules
+COPY --from=installer /app/packages ./packages
+COPY --from=installer /app/integrations ./integrations
+COPY --from=installer /app/apps/api ./apps/api
+COPY --from=installer /app/apps/workers ./apps/workers
+COPY --from=installer /app/package.json ./package.json
+
+# Start API in background (uses Render's PORT), start Workers in foreground on a different port
+CMD ["sh", "-c", "cd packages/prisma && npx prisma db push --accept-data-loss && npx tsx seed.ts --if-empty && cd ../../ && node apps/api/dist/main & PORT=3334 node apps/workers/dist/main"]
