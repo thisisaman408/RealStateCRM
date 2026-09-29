@@ -1,0 +1,47 @@
+{
+  "name": "@resyl/workers",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Resyl async workers — BullMQ job processors for SMS, WhatsApp, portal sync, AI tasks",
+  "type": "module",
+  "scripts": {
+    "start:dev": "nest start --watch",
+    "start:prod": "node dist/main",
+    "build": "nest build",
+    "lint": "eslint \"{src}/**/*.ts\" --fix",
+    "test": "vitest run test/e2e"
+  },
+  "dependencies": {
+    "@resyl/constants": "workspace:*",
+    "@resyl/int-mail-brevo": "workspace:*",
+    "@resyl/int-mail-constant-contact": "workspace:*",
+    "@resyl/int-mail-gmail": "workspace:*",
+    "@resyl/int-mail-mailchimp": "workspace:*",
+    "@resyl/int-mail-mailgun": "workspace:*",
+    "@resyl/int-mail-outlook": "workspace:*",
+    "@resyl/int-mail-sendgrid": "workspace:*",
+    "@resyl/int-mail-ses": "workspace:*",
+    "@resyl/int-sms-aws-sns": "workspace:*",
+    "@resyl/int-sms-bird": "workspace:*",
+    "@resyl/int-sms-gupshup": "workspace:*",
+    "@resyl/int-sms-infobip": "workspace:*",
+    "@resyl/int-sms-plivo": "workspace:*",
+    "@resyl/int-sms-sinch": "workspace:*",
+    "@resyl/int-sms-telnyx": "workspace:*",
+    "@resyl/int-sms-twilio": "workspace:*",
+    "@resyl/int-sms-vonage": "workspace:*",
+    "@resyl/int-voice": "workspace:*",
+    "@resyl/int-whatsapp": "workspace:*",
+    "@resyl/prisma": "workspace:*",
+    "@resyl/types": "workspace:*",
+    "@nestjs/common": "^11.1.28",
+    "@nestjs/core": "^11.1.28",
+    "@nestjs/platform-express": "^11.1.28"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.24",
+    "@nestjs/testing": "^11.1.28",
+    "@types/node": "^24.13.3",
+    "typescript": "^5.9.3"
+  }
+}

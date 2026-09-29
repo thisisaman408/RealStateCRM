@@ -1,0 +1,310 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-plus-jakarta-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-bg-muted: var(--bg-muted);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand-950: var(--brand-950);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
+}
+
+/* ─── Design Token System (Perceptual OKLCH) ───────────────────────── */
+:root {
+  /* Canvas & Surface Backgrounds */
+  --bg-base: oklch(0.985 0.003 260);
+  --bg-surface: oklch(1 0 0);
+  --bg-elevated: oklch(1 0 0);
+  --bg-subtle: oklch(0.965 0.006 260);
+  --bg-muted: oklch(0.935 0.009 260);
+
+  /* Structural Borders */
+  --border-subtle: oklch(0 0 0 / 0.06);
+  --border-default: oklch(0 0 0 / 0.10);
+  --border-strong: oklch(0 0 0 / 0.18);
+  --border-glass: oklch(1 0 0 / 0.25);
+
+  /* Primary Brand — Enterprise Royal Violet/Indigo */
+  --brand-50: oklch(0.975 0.015 275);
+  --brand-100: oklch(0.945 0.035 275);
+  --brand-200: oklch(0.895 0.075 275);
+  --brand-300: oklch(0.815 0.125 275);
+  --brand-400: oklch(0.715 0.185 275);
+  --brand-500: oklch(0.625 0.225 275);
+  --brand-600: oklch(0.535 0.235 275); /* Primary Action */
+  --brand-700: oklch(0.455 0.215 275);
+  --brand-800: oklch(0.375 0.175 275);
+  --brand-900: oklch(0.285 0.135 275);
+  --brand-950: oklch(0.195 0.095 275);
+
+  /* Text Hierarchy — High Readability & APCA Compliant */
+  --text-primary: oklch(0.145 0.01 260);
+  --text-secondary: oklch(0.325 0.012 260);
+  --text-tertiary: oklch(0.485 0.015 260);
+  --text-muted: oklch(0.625 0.012 260);
+  --text-inverse: oklch(0.99 0 0);
+
+  /* Semantic Statuses */
+  --success-bg: oklch(0.965 0.035 145);
+  --success-fg: oklch(0.42 0.16 145);
+  --success-border: oklch(0.88 0.06 145);
+
+  --warning-bg: oklch(0.975 0.035 85);
+  --warning-fg: oklch(0.48 0.16 80);
+  --warning-border: oklch(0.89 0.07 85);
+
+  --danger-bg: oklch(0.965 0.035 25);
+  --danger-fg: oklch(0.46 0.20 25);
+  --danger-border: oklch(0.88 0.07 25);
+
+  --info-bg: oklch(0.965 0.035 240);
+  --info-fg: oklch(0.44 0.17 240);
+  --info-border: oklch(0.88 0.06 240);
+
+  /* Real Estate Luxury Gold & Amber Accents */
+  --gold-bg: oklch(0.975 0.04 85);
+  --gold-fg: oklch(0.50 0.17 80);
+  --gold-border: oklch(0.88 0.08 85);
+
+  /* Layered Depth Shadows */
+  --shadow-border: 0px 0px 0px 1px oklch(0 0 0 / 0.06), 0px 1px 2px -1px oklch(0 0 0 / 0.06), 0px 2px 4px 0px oklch(0 0 0 / 0.04);
+  --shadow-border-hover: 0px 0px 0px 1px oklch(0 0 0 / 0.09), 0px 2px 4px -1px oklch(0 0 0 / 0.08), 0px 4px 8px 0px oklch(0 0 0 / 0.06);
+  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.04);
+  --shadow-md: 0 4px 12px -2px oklch(0 0 0 / 0.06), 0 2px 6px -2px oklch(0 0 0 / 0.04);
+  --shadow-lg: 0 12px 24px -4px oklch(0 0 0 / 0.08), 0 4px 10px -3px oklch(0 0 0 / 0.04);
+  --shadow-xl: 0 24px 36px -6px oklch(0 0 0 / 0.10), 0 10px 18px -4px oklch(0 0 0 / 0.05);
+  --shadow-brand: 0 8px 24px -4px oklch(0.535 0.235 275 / 0.28);
+  --shadow-brand-lg: 0 16px 36px -6px oklch(0.535 0.235 275 / 0.35);
+
+  /* Emil Kowalski Precision Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 350ms;
+
+  /* Concentric Border Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-full: 9999px;
+}
+
+/* ─── Base Styles ──────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-plus-jakarta-sans, var(--font-sans, system-ui, sans-serif));
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+/* ─── Headings & Paragraph Typography Defaults ─────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ─── Selection ────────────────────────────────────────────────────── */
+::selection {
+  background: var(--brand-100);
+  color: var(--brand-900);
+}
+
+/* ─── Focus Rings ──────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Scrollbars ───────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-muted);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ─── Utility Classes ──────────────────────────────────────────────── */
+@layer utilities {
+  /* Scrollbar hide */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Tabular numbers for live updating counters, prices, statistics */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Hover lift with layered shadow */
+  .hover-lift {
+    transition: transform var(--duration-base) var(--ease-out-expo),
+      box-shadow var(--duration-base) var(--ease-out-expo),
+      border-color var(--duration-base) var(--ease-out-expo);
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Tactile button press feedback */
+  .press-effect {
+    transition: transform var(--duration-fast) var(--ease-in-out);
+  }
+  .press-effect:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+
+  /* Glass Surface */
+  .glass {
+    background: oklch(1 0 0 / 0.78);
+    backdrop-filter: blur(16px) saturate(1.6);
+    -webkit-backdrop-filter: blur(16px) saturate(1.6);
+    border: 1px solid oklch(1 0 0 / 0.6);
+    box-shadow: var(--shadow-border);
+  }
+
+  .glass-dark {
+    background: oklch(0.16 0.01 260 / 0.85);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid oklch(1 0 0 / 0.12);
+    box-shadow: 0 20px 40px -15px oklch(0 0 0 / 0.5);
+  }
+
+  /* Luxury Brand Gradient Text */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--brand-700) 0%, var(--brand-500) 50%, oklch(0.65 0.22 300) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gradient-gold {
+    background: linear-gradient(135deg, oklch(0.74 0.17 80) 0%, oklch(0.85 0.14 88) 50%, oklch(0.65 0.16 75) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Subtle noise texture overlay */
+  .noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Shadow as border */
+  .shadow-border {
+    box-shadow: var(--shadow-border);
+  }
+}
+
+/* ─── Keyframe Animations ──────────────────────────────────────────── */
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes pulse-brand {
+  0%, 100% {
+    box-shadow: 0 0 0 0 oklch(0.535 0.235 275 / 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px oklch(0.535 0.235 275 / 0.15);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

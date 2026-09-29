@@ -1,0 +1,10 @@
+/node_modules
+/dist
+/generated/prisma
+/generated
+.env
+.env*.local
+/prisma/migrations
+/src/generated/
+/migrations/*
+/src/generated/*

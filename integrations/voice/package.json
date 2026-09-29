@@ -1,0 +1,29 @@
+{
+  "name": "@resyl/int-voice",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.ts"
+    }
+  },
+  "dependencies": {
+    "@resyl/types": "workspace:*",
+    "@resyl/int-telephony-twilio": "workspace:*",
+    "@resyl/int-telephony-vobiz": "workspace:*",
+    "@resyl/int-telephony-exotel": "workspace:*",
+    "@resyl/int-telephony-telnyx": "workspace:*",
+    "@resyl/int-agent-vapi": "workspace:*",
+    "@resyl/int-agent-retell": "workspace:*",
+    "@resyl/int-agent-elevenlabs": "workspace:*",
+    "@resyl/int-agent-sarvam": "workspace:*",
+    "@resyl/int-agent-bolna": "workspace:*",
+    "@resyl/int-agent-pipecat": "workspace:*",
+    "@resyl/int-agent-livekit": "workspace:*",
+    "@resyl/int-agent-openai-realtime": "workspace:*"
+  }
+}

@@ -1,0 +1,4298 @@
+// ============================================================================
+// Resyl — Complete Prisma Schema
+// Database: PostgreSQL
+// ORM: Prisma
+// Version: 1.0
+
+// Organization:
+//   1. Generator & Datasource
+//   2. Enums
+//   3. Domain 1: Identity & Access
+//   4. Domain 2: Lead & Customer Management
+//   5. Domain 3: Activity & Communication (incl. WhatsApp)
+//   6. Domain 4: Project & Inventory
+//   7. Domain 5: Site Visit & Sales Pipeline
+//   8. Domain 6: Booking & Post-Sales
+//   9. Domain 7: Channel Partner & Brokerage
+//  10. Domain 8: Accounts & Collections
+//  11. Domain 9: Business Manager & Director
+//  12. Domain 10: Internal Communication
+// ============================================================================
+
+// ─────────────────────────────────────────────
+// 1. GENERATOR & DATASOURCE
+// ─────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────
+// 2. ENUMS
+// ─────────────────────────────────────────────
+
+// ── Identity & Access ──
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum PermissionAction {
+  VIEW
+  CREATE
+  EDIT
+  DELETE
+  EXPORT
+  IMPORT
+  APPROVE
+  ASSIGN
+  MANAGE
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  ASSIGN
+  APPROVE
+  REJECT
+  STATUS_CHANGE
+  EXPORT
+}
+
+// ── Lead Management ──
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  INTERESTED
+  QUALIFIED
+  SITE_VISIT_SCHEDULED
+  SITE_VISIT_COMPLETED
+  NEGOTIATION
+  BOOKING
+  DOCUMENT
+  LOAN
+  AGREEMENT
+  HANDOVER
+  LOST
+}
+
+enum LeadTemperature {
+  HOT
+  WARM
+  COLD
+}
+
+enum LeadSourceType {
+  FACEBOOK_ADS
+  GOOGLE_ADS
+  INSTAGRAM
+  REFERRAL
+  ORGANIC
+  DIRECT_CALL
+  WALK_IN
+  CHANNEL_PARTNER
+  WHATSAPP
+  MARKETING_CAMPAIGN
+  MARKETING_CSV_IMPORT
+  OTHER
+}
+
+enum DistributionMethod {
+  ROUND_ROBIN
+  MANUAL
+  PROJECT_WISE
+}
+
+// ── Activity & Communication ──
+
+enum FollowUpStatus {
+  SCHEDULED
+  COMPLETED
+  MISSED
+  RESCHEDULED
+  CANCELLED
+}
+
+enum CallDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum CallStatus {
+  CONNECTED
+  NOT_ANSWERED
+  BUSY
+  FAILED
+  VOICEMAIL
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  OVERDUE
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationType {
+  LEAD_ASSIGNED
+  FOLLOW_UP_REMINDER
+  MISSED_FOLLOW_UP
+  SITE_VISIT_ASSIGNED
+  SITE_VISIT_REMINDER
+  BOOKING_CONFIRMED
+  BOOKING_REQUEST
+  REQUEST_APPROVED
+  REQUEST_REJECTED
+  PAYMENT_DUE
+  PAYMENT_RECEIVED
+  DOCUMENT_REMINDER
+  TARGET_REMINDER
+  ANNOUNCEMENT
+  INVENTORY_CHANGED
+  MEETING_REMINDER
+  RECOGNITION
+  CHAT_MESSAGE
+  SITE_VISIT_ARRIVE
+  ACHIEVEMENT_MILESTONE
+  MONTHLY_ANALYTICS
+  MONTHLY_LEADERBOARD
+  MANAGER_TEAM_ALERT
+  PROJECT_ASSIGNED
+  COMMISSION_REMINDER
+  TASK_COMPLETED
+  INVENTORY_MILESTONE
+}
+
+enum ActivityType {
+  CALL
+  WHATSAPP_MESSAGE
+  FOLLOW_UP
+  SITE_VISIT
+  STATUS_CHANGE
+  NOTE_ADDED
+  ASSIGNMENT
+  BOOKING
+  PAYMENT
+  DOCUMENT_UPLOAD
+  NEGOTIATION
+  MEETING
+  SYSTEM
+}
+
+// ── WhatsApp ──
+
+enum WhatsAppMessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum WhatsAppMessageStatus {
+  SENT
+  DELIVERED
+  READ
+  FAILED
+  RECEIVED
+}
+
+enum WhatsAppMessageType {
+  TEXT
+  TEMPLATE
+  IMAGE
+  DOCUMENT
+  VIDEO
+  AUDIO
+  LOCATION
+  CONTACT
+  INTERACTIVE
+}
+
+// enum WhatsAppTemplateCategory {
+//   MARKETING
+//   UTILITY
+//   AUTHENTICATION
+// }
+
+// ── Project & Inventory ──
+
+enum ProjectStatus {
+  UPCOMING
+  UNDER_CONSTRUCTION
+  READY_TO_MOVE
+  COMPLETED
+}
+
+enum ConstructionStatus {
+  NOT_STARTED
+  EXCAVATION
+  FOUNDATION
+  SUPER_STRUCTURE
+  BRICKWORK
+  PLASTERING
+  FINISHING
+  READY_FOR_POSSESSION
+  HANDOVER
+}
+
+enum ProjectType {
+  RESIDENTIAL
+  COMMERCIAL
+  MIXED
+}
+
+enum UnitStatus {
+  AVAILABLE
+  RESERVED
+  BLOCKED
+  SOLD
+}
+
+enum UnitType {
+  STUDIO
+  ONE_BHK
+  TWO_BHK
+  THREE_BHK
+  FOUR_BHK
+  PENTHOUSE
+  VILLA
+  SHOP
+  OFFICE
+}
+
+// ── Site Visit & Sales ──
+
+enum SiteVisitStatus {
+  ASSIGNED
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+  NO_SHOW
+}
+
+enum CustomerInterestLevel {
+  HIGH
+  MEDIUM
+  LOW
+  NOT_INTERESTED
+}
+
+enum NegotiationStatus {
+  OPEN
+  COUNTER_OFFERED
+  MANAGER_REVIEW
+  APPROVED
+  REJECTED
+  CLOSED
+}
+
+// ── Booking & Post-Sales ──
+
+enum BookingStatus {
+  CONFIRMED
+  DOCUMENTATION_PENDING
+  PAYMENT_PENDING
+  LOAN_IN_PROGRESS
+  AGREEMENT_PENDING
+  AGREEMENT_COMPLETED
+  POSSESSION_PENDING
+  HANDOVER_COMPLETED
+  CANCELLED
+}
+
+enum BookingSource {
+  DIRECT
+  CHANNEL_PARTNER
+}
+
+enum DocumentType {
+  AADHAAR
+  PAN
+  PASSPORT_PHOTO
+  ADDRESS_PROOF
+  INCOME_DOCUMENT
+  BOOKING_FORM
+  AGREEMENT_COPY
+  BANK_STATEMENT
+  OTHER
+}
+
+enum DocumentVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+}
+
+enum PaymentMode {
+  CASH
+  CHEQUE
+  NEFT
+  RTGS
+  UPI
+  DEMAND_DRAFT
+  OTHER
+}
+
+enum LoanStatus {
+  NOT_APPLIED
+  APPLIED
+  DOCUMENTS_SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  DISBURSED
+  REJECTED
+}
+
+enum AgreementStatus {
+  NOT_STARTED
+  DRAFT_PREPARED
+  STAMP_DUTY_PAID
+  REGISTERED
+  COMPLETED
+}
+
+enum PossessionStatus {
+  NOT_READY
+  READY
+  SCHEDULED
+  HANDED_OVER
+}
+
+// ── Channel Partner ──
+
+enum BrokerStatus {
+  PENDING_APPROVAL
+  ACTIVE
+  INACTIVE
+  BLACKLISTED
+  NEW
+  CONTACTED
+  VISIT
+  DEAL
+}
+
+enum BrokerageStatus {
+  PENDING
+  APPROVED
+  PAID
+  DISPUTED
+  HELD
+}
+
+// ── Accounts ──
+
+enum ExpenseCategory {
+  SALARY
+  MARKETING
+  OFFICE
+  TRAVEL
+  COMMISSION
+  LEGAL
+  RENT
+  UTILITIES
+  OTHER
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ESCALATED
+}
+
+enum ApprovalType {
+  DISCOUNT
+  SPECIAL_PRICING
+  BROKERAGE_SETTLEMENT
+  EXPENSE
+  REFUND
+  BOOKING_CANCELLATION
+  BOOKING
+}
+
+enum ApprovalRequestStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  CLOSED
+}
+
+enum InboundCommissionStatus {
+  PENDING
+  RECEIVED
+}
+
+// ── Internal Communication ──
+
+enum ChatRoomType {
+  DIRECT
+  TEAM
+  DEPARTMENT
+}
+
+// ── Marketing & Campaigns ──
+
+enum MarketingChannel {
+  EMAIL
+  SMS
+  WHATSAPP
+  VOICE_CALL
+}
+
+enum EmailProviderType {
+  SYSTEM_DEFAULT
+  AWS_SES
+  SENDGRID
+  BREVO
+  MAILCHIMP
+  MAILGUN
+  GMAIL
+  OUTLOOK
+  CONSTANT_CONTACT
+  MULTI_PROVIDER
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  PROCESSING
+  COMPLETED
+  PAUSED
+  FAILED
+  CANCELLED
+}
+
+enum RecipientDeliveryStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  SPAM_COMPLAINT
+  UNSUBSCRIBED
+  FAILED
+}
+
+enum AudienceSourceType {
+  CRM_DATABASE
+  CSV_UPLOAD
+  HYBRID
+}
+
+// ─────────────────────────────────────────────
+// 3. DOMAIN 1: IDENTITY & ACCESS
+// ─────────────────────────────────────────────
+
+model Department {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  code        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users     User[]
+  roles     Role[]
+  chatRooms ChatRoom[]
+
+  distributionRules LeadDistributionRule[]
+
+  @@map("department")
+}
+
+model User {
+  id              String     @id @default(uuid())
+  name            String?
+  email           String?    @unique
+  emailVerified   Boolean    @default(false)
+  image           String?
+  username        String?    @unique
+  displayUsername String?
+  phoneNumber     String?    @unique
+  employeeCode    String?    @unique
+  status          UserStatus @default(ACTIVE)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  roleId       String?
+  role         Role?       @relation(fields: [roleId], references: [id])
+  managerId    String?
+  manager      User?       @relation("UserManager", fields: [managerId], references: [id])
+  subordinates User[]      @relation("UserManager")
+
+  lastLatitude   Float?
+  lastLongitude  Float?
+  lastLocationAt DateTime?
+
+  expoPushToken String?
+
+  isOnCall Boolean @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  sessions Session[]
+  accounts Account[]
+
+  loginHistory             LoginHistory[]
+  assignedLeads            Lead[]                  @relation("AssignedUser")
+  createdLeads             Lead[]                  @relation("CreatedBy")
+  followUps                FollowUp[]
+  callRecords              CallRecord[]
+  siteVisitsAsExec         SiteVisit[]             @relation("SalesExec")
+  siteVisitsAsCreator      SiteVisit[]             @relation("SiteVisitCreator")
+  negotiations             Negotiation[]
+  tasks                    Task[]                  @relation("AssignedTo")
+  createdTasks             Task[]                  @relation("TaskCreator")
+  notifications            Notification[]
+  notes                    Note[]
+  targets                  EmployeeTarget[]
+  recognitions             EmployeeRecognition[]
+  attendance               Attendance[]
+  dailyPerformanceLogs     DailyPerformanceLog[]
+  auditLogs                AuditLog[]
+  projectAssignments       ProjectAssignment[]
+  towerAssignments         TowerAssignment[]
+  chatRoomMembers          ChatRoomMember[]
+  chatMessages             ChatMessage[]
+  whatsappConversations    WhatsAppConversation[]  @relation("ConversationAgent")
+  emailConversations       EmailConversation[]     @relation("EmailConversationAgent")
+  smsConversations         SmsConversation[]       @relation("SmsConversationAgent")
+  brokerMeetings           BrokerMeeting[]
+  managedBrokers           Broker[]                @relation("SourcingManager")
+  assignmentFrom           LeadAssignmentHistory[] @relation("AssignmentFrom")
+  assignmentTo             LeadAssignmentHistory[] @relation("AssignmentTo")
+  assignedByUser           LeadAssignmentHistory[] @relation("AssignedByUser")
+  blockedUnits             Unit[]                  @relation("UnitBlockedBy")
+  reservedUnits            Unit[]                  @relation("UnitReservedFor")
+  constructionUpdates      ConstructionUpdate[]
+  verifiedDocuments        CustomerDocument[]
+  salesExecBookings        Booking[]               @relation("BookingSalesExec")
+  closedBookings           Booking[]               @relation("BookingClosingManager")
+  paymentTransactions      PaymentTransaction[]
+  possessionHandovers      PossessionHandover[]
+  closedReferrals          BrokerReferral[]        @relation("ReferralClosingManager")
+  approvedBrokerageRecords BrokerageRecord[]       @relation("BrokerageRecordApprover")
+  assignedCollections      CollectionRecord[]      @relation("CollectionAssignedTo")
+  approvedSettlements      BrokerageSettlement[]   @relation("SettlementApprover")
+  processedSettlements     BrokerageSettlement[]   @relation("SettlementProcessor")
+  requestedExpenses        Expense[]               @relation("ExpenseRequester")
+  approvedExpenses         Expense[]               @relation("ExpenseApprover")
+  createdInvoices          Invoice[]
+  requestedApprovals       FinancialApproval[]     @relation("ApprovalRequester")
+  level1Approvals          FinancialApproval[]     @relation("ApprovalLevel1")
+  level2Approvals          FinancialApproval[]     @relation("ApprovalLevel2")
+  managerTasks             ManagerTask[]           @relation("ManagerTaskCreator")
+  taskAssignments          ManagerTaskUser[]       @relation("ManagerTaskAssignee")
+  createdAnnouncements     Announcement[]          @relation("AnnouncementCreator")
+
+  approvalRequestsMade       ApprovalRequest[]      @relation("ApprovalRequestExec")
+  approvalRequestsManaged    ApprovalRequest[]      @relation("ApprovalRequestManager")
+  approvalMessagesSent       ApprovalMessage[]      @relation("ApprovalMessageSender")
+  receivedInboundCommissions InboundCommission[]    @relation("ReceivedInboundCommissions")
+  assignedPostSalesBookings  Booking[]              @relation("BookingPostSales")
+  createdCampaigns           MarketingCampaign[]    @relation("CampaignCreatedBy")
+  createdSmsCampaigns        SmsCampaign[]          @relation("SmsCampaignCreatedBy")
+  createdVoiceCampaigns      VoiceCampaign[]        @relation("VoiceCampaignCreatedBy")
+  createdWhatsAppBroadcasts  WhatsAppBroadcast[]    @relation("WhatsAppBroadcastCreatedBy")
+  createdWhatsAppAutomations WhatsAppAutomation[]   @relation("WhatsAppAutomationCreatedBy")
+  assignedWhatsAppDeals      WhatsAppDeal[]         @relation("WhatsAppDealAssignedUser")
+  createdWhatsAppNotes       WhatsAppContactNote[]  @relation("WhatsAppNoteAuthor")
+  dealActivities             WhatsAppDealActivity[] @relation("WhatsAppDealActivityAuthor")
+
+  @@index([departmentId])
+  @@index([roleId])
+  @@index([managerId])
+  @@index([status])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
+}
+
+model Role {
+  id           String      @id @default(uuid())
+  name         String
+  code         String      @unique
+  description  String?
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  isSystemRole Boolean     @default(false)
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  permissions RolePermission[]
+  users       User[]
+
+  @@index([departmentId])
+  @@map("role")
+}
+
+model RolePermission {
+  id        String           @id @default(uuid())
+  roleId    String
+  role      Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  resource  String
+  action    PermissionAction
+  isAllowed Boolean          @default(true)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([roleId, resource, action])
+  @@index([roleId])
+  @@map("role_permission")
+}
+
+model AuditLog {
+  id          String      @id @default(uuid())
+  userId      String?
+  user        User?       @relation(fields: [userId], references: [id])
+  action      AuditAction
+  entityType  String
+  entityId    String
+  oldValue    Json?
+  newValue    Json?
+  ipAddress   String?
+  userAgent   String?
+  description String?
+  createdAt   DateTime    @default(now())
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_log")
+}
+
+model LoginHistory {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress String?
+  userAgent String?
+  device    String?
+  browser   String?
+  os        String?
+  loginAt   DateTime  @default(now())
+  logoutAt  DateTime?
+  isSuccess Boolean   @default(true)
+
+  @@index([userId])
+  @@index([loginAt])
+  @@map("login_history")
+}
+
+model EmployeeTarget {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  period           String
+  targetCalls      Int?
+  targetFollowUps  Int?
+  targetSiteVisits Int?
+  targetBookings   Int?
+  targetRevenue    Decimal?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([userId, period])
+  @@index([userId])
+  @@map("employee_target")
+}
+
+model EmployeeRecognition {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  awardType   String
+  period      String
+  metric      String?
+  metricValue Decimal?
+  awardedAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([awardType])
+  @@map("employee_recognition")
+}
+
+model Attendance {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime  @db.Date
+  checkIn   DateTime?
+  checkOut  DateTime?
+  status    String    @default("PRESENT")
+  remarks   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+  @@map("attendance")
+}
+
+model DailyPerformanceLog {
+  id     String   @id @default(uuid())
+  userId String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date   DateTime @db.Date
+
+  // Cold Call tracking
+  coldCallTarget         Int @default(100)
+  coldCallsDone          Int @default(0)
+  coldCallBacklogIn      Int @default(0) // backlog carried into this day
+  coldCallBacklogCleared Int @default(0) // how many backlog calls cleared this day
+
+  // Follow-up tracking
+  followUpTarget    Int   @default(0)
+  followUpsDone     Int   @default(0)
+  missedFollowUpIds Json? // array of follow-up IDs that were missed this day
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+  @@map("daily_performance_log")
+}
+
+// ─────────────────────────────────────────────
+// 3b. MANAGER TASKS & ANNOUNCEMENTS
+// ─────────────────────────────────────────────
+
+/**
+ * A daily cold-call target task created by a PRE_SALES_MANAGER.
+ * Persists until the manager edits or deletes it.
+ * Replaces the old hardcoded COLD_CALL_DAILY_TARGET = 100 constant.
+ */
+model ManagerTask {
+  id             String            @id @default(uuid())
+  managerId      String
+  manager        User              @relation("ManagerTaskCreator", fields: [managerId], references: [id])
+  coldCallTarget Int
+  isActive       Boolean           @default(true)
+  assignees      ManagerTaskUser[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([managerId])
+  @@index([isActive])
+  @@map("manager_task")
+}
+
+/**
+ * Join table between ManagerTask and the employees it is assigned to.
+ * backlogOverride: when set by the manager, replaces the computed backlog for this employee.
+ */
+model ManagerTaskUser {
+  id              String      @id @default(uuid())
+  taskId          String
+  task            ManagerTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User        @relation("ManagerTaskAssignee", fields: [userId], references: [id])
+  backlogOverride Int? // null = use computed backlog; number = manager manually reduced it
+  targetOverride  Int? // Optional manual daily target override set by manager for today
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([taskId])
+  @@index([userId])
+  @@map("manager_task_user")
+}
+
+/**
+ * A broadcast message from a PRE_SALES_MANAGER to all their subordinates.
+ * Employees see active announcements at the top of their dashboard.
+ */
+model Announcement {
+  id          String   @id @default(uuid())
+  managerId   String
+  manager     User     @relation("AnnouncementCreator", fields: [managerId], references: [id])
+  title       String
+  description String   @db.Text
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([managerId])
+  @@index([isActive])
+  @@map("announcement")
+}
+
+// ─────────────────────────────────────────────
+// 4. DOMAIN 2: LEAD & CUSTOMER MANAGEMENT
+// ─────────────────────────────────────────────
+
+model LeadSource {
+  id        String         @id @default(uuid())
+  name      String         @unique
+  type      LeadSourceType
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  leads Lead[]
+
+  @@map("lead_source")
+}
+
+model Lead {
+  id             String  @id @default(uuid())
+  firstName      String
+  lastName       String?
+  phone          String
+  alternatePhone String?
+  email          String?
+  avatar         String?
+
+  sourceId    String?
+  source      LeadSource?      @relation(fields: [sourceId], references: [id])
+  status      LeadStatus       @default(NEW)
+  subStatus   String?          @default("PENDING")
+  temperature LeadTemperature?
+  score       Int?             @default(0)
+
+  interestedProjectId  String?
+  interestedProject    Project? @relation(fields: [interestedProjectId], references: [id])
+  interestedTowerId    String?
+  interestedTower      Tower?   @relation(fields: [interestedTowerId], references: [id])
+  interestedUnitId     String?
+  interestedUnit       Unit?    @relation(fields: [interestedUnitId], references: [id])
+  brokerId             String?
+  broker               Broker?  @relation(fields: [brokerId], references: [id])
+  budget               Decimal?
+  preferredConfig      String?
+  preferredLocation    String?
+  requirements         String?
+  customerSummary      String?  @db.Text
+  aiNextStepSuggestion String?  @db.Text
+
+  assignedUserId String?
+  assignedUser   User?   @relation("AssignedUser", fields: [assignedUserId], references: [id])
+  createdById    String?
+  createdBy      User?   @relation("CreatedBy", fields: [createdById], references: [id])
+
+  lastContactDate  DateTime?
+  nextFollowUpDate DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  assignmentHistory     LeadAssignmentHistory[]
+  followUps             FollowUp[]
+  callRecords           CallRecord[]
+  whatsappConversations WhatsAppConversation[]
+  emailConversations    EmailConversation[]
+  smsConversations      SmsConversation[]
+  siteVisits            SiteVisit[]
+  negotiations          Negotiation[]
+  notes                 Note[]                  @relation("LeadNotes")
+  activities            ActivityTimeline[]      @relation("LeadActivities")
+  customer              Customer?
+  campaignRecipients    CampaignRecipient[]
+  smsRecipients         SmsRecipient[]
+  voiceRecipients       VoiceRecipient[]
+  whatsappContacts      WhatsAppContact[]
+  metaLeadLogs          MetaLeadWebhookLog[]    @relation("MetaLeadLog")
+  googleLeadLogs        GoogleLeadWebhookLog[]  @relation("GoogleLeadLog")
+
+  @@index([status])
+  @@index([temperature])
+  @@index([assignedUserId])
+  @@index([sourceId])
+  @@index([interestedProjectId])
+  @@index([interestedTowerId])
+  @@index([interestedUnitId])
+  @@index([brokerId])
+  @@index([nextFollowUpDate])
+  @@index([createdAt])
+  @@index([phone])
+  @@map("lead")
+}
+
+model LeadAssignmentHistory {
+  id           String   @id @default(uuid())
+  leadId       String
+  lead         Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  fromUserId   String?
+  fromUser     User?    @relation("AssignmentFrom", fields: [fromUserId], references: [id])
+  toUserId     String
+  toUser       User     @relation("AssignmentTo", fields: [toUserId], references: [id])
+  reason       String?
+  assignedById String?
+  assignedBy   User?    @relation("AssignedByUser", fields: [assignedById], references: [id])
+  assignedAt   DateTime @default(now())
+
+  @@index([leadId])
+  @@index([toUserId])
+  @@index([assignedAt])
+  @@map("lead_assignment_history")
+}
+
+model LeadDistributionRule {
+  id              String             @id @default(uuid())
+  name            String
+  method          DistributionMethod
+  projectId       String?
+  project         Project?           @relation(fields: [projectId], references: [id])
+  departmentId    String?
+  department      Department?        @relation(fields: [departmentId], references: [id])
+  maxLeadsPerUser Int?
+  isActive        Boolean            @default(true)
+  roundRobinIndex Int                @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@map("lead_distribution_rule")
+}
+
+// ─────────────────────────────────────────────
+// 5. DOMAIN 3: ACTIVITY & COMMUNICATION
+// ─────────────────────────────────────────────
+
+model CallRecord {
+  id       String  @id @default(uuid())
+  leadId   String?
+  lead     Lead?   @relation(fields: [leadId], references: [id])
+  brokerId String?
+  broker   Broker? @relation(fields: [brokerId], references: [id])
+  userId   String
+  user     User    @relation(fields: [userId], references: [id])
+
+  phoneNumber String
+  direction   CallDirection
+  status      CallStatus
+  duration    Int?
+  startedAt   DateTime
+  endedAt     DateTime?
+
+  recordingUrl    String?
+  recordingSize   Int?
+  aiTranscript    String? @db.Text
+  aiSummary       String? @db.Text
+  aiSentiment     String?
+  aiExtractedData Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([leadId])
+  @@index([brokerId])
+  @@index([userId])
+  @@index([startedAt])
+  @@index([direction])
+  @@map("call_record")
+}
+
+model WhatsAppBusinessAccount {
+  id                String    @id @default(uuid())
+  businessName      String
+  phoneNumberId     String    @unique
+  displayPhone      String
+  wabaId            String    @unique
+  accessToken       String
+  webhookSecret     String?
+  webhookVerifiedAt DateTime?
+  appSecret         String?
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  templates                   WhatsAppTemplate[]
+  conversations               WhatsAppConversation[]
+  contacts                    WhatsAppContact[]
+  broadcasts                  WhatsAppBroadcast[]
+  automations                 WhatsAppAutomation[]
+  automationLogs              WhatsAppAutomationLog[]
+  automationPendingExecutions WhatsAppAutomationPendingExecution[]
+  tags                        WhatsAppTag[]
+  quickReplies                WhatsAppQuickReply[]
+  flows                       WhatsAppFlow[]
+  flowRuns                    WhatsAppFlowRun[]
+  aiConfig                    WhatsAppAiConfig?
+  webhookEndpoints            WhatsAppWebhookEndpoint[]
+  pipelines                   WhatsAppPipeline[]
+  deals                       WhatsAppDeal[]
+  customFields                WhatsAppCustomField[]
+
+  @@map("whatsapp_business_account")
+}
+
+model WhatsAppContact {
+  id        String                  @id @default(uuid())
+  accountId String
+  account   WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  leadId    String?
+  lead      Lead?                   @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  phone     String
+  name      String?
+  email     String?
+  company   String?
+  avatarUrl String?
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+  deletedAt DateTime?
+
+  conversations               WhatsAppConversation[]
+  tags                        WhatsAppContactTag[]
+  broadcastRecipients         WhatsAppBroadcastRecipient[]
+  flowRuns                    WhatsAppFlowRun[]
+  automationLogs              WhatsAppAutomationLog[]
+  automationPendingExecutions WhatsAppAutomationPendingExecution[]
+  notes                       WhatsAppContactNote[]
+  deals                       WhatsAppDeal[]
+  customValues                WhatsAppContactCustomValue[]
+
+  @@unique([accountId, phone])
+  @@index([accountId])
+  @@index([phone])
+  @@index([leadId])
+  @@map("whatsapp_contact")
+}
+
+model WhatsAppTemplate {
+  id            String                  @id @default(uuid())
+  accountId     String
+  account       WhatsAppBusinessAccount @relation(fields: [accountId], references: [id])
+  name          String
+  language      String                  @default("en")
+  category      String                  @default("MARKETING")
+  status        String                  @default("PENDING")
+  headerText    String?
+  bodyText      String
+  footerText    String?
+  buttons       Json?
+  exampleValues Json?
+  isActive      Boolean                 @default(true)
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  messages WhatsAppMessage[]
+
+  @@unique([accountId, name, language])
+  @@map("whatsapp_template")
+}
+
+model WhatsAppConversation {
+  id           String                  @id @default(uuid())
+  accountId    String
+  account      WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  contactId    String?
+  contact      WhatsAppContact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  contactPhone String
+  contactName  String?
+
+  leadId     String?
+  lead       Lead?     @relation(fields: [leadId], references: [id])
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  brokerId   String?
+  broker     Broker?   @relation(fields: [brokerId], references: [id])
+
+  agentUserId String?
+  agent       User?   @relation("ConversationAgent", fields: [agentUserId], references: [id])
+
+  status              String    @default("open")
+  lastMessageText     String?   @db.Text
+  lastMessageAt       DateTime?
+  unreadCount         Int       @default(0)
+  aiAutoReplyDisabled Boolean   @default(false)
+  aiReplyCount        Int       @default(0)
+  isActive            Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  messages WhatsAppMessage[]
+  flowRuns WhatsAppFlowRun[]
+  deals    WhatsAppDeal[]
+
+  @@index([accountId])
+  @@index([contactId])
+  @@index([status])
+  @@index([leadId])
+  @@index([customerId])
+  @@index([brokerId])
+  @@index([contactPhone])
+  @@index([lastMessageAt])
+  @@map("whatsapp_conversation")
+}
+
+model WhatsAppMessage {
+  id             String               @id @default(uuid())
+  conversationId String
+  conversation   WhatsAppConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  waMessageId String?                  @unique
+  direction   WhatsAppMessageDirection
+  type        WhatsAppMessageType
+  status      WhatsAppMessageStatus
+  senderType  String                   @default("agent")
+  contentType String                   @default("text")
+  senderName  String?
+
+  body               String?           @db.Text
+  caption            String?
+  templateId         String?
+  template           WhatsAppTemplate? @relation(fields: [templateId], references: [id])
+  templateValues     Json?
+  interactivePayload Json?
+
+  mediaUrl  String?
+  mediaType String?
+  mediaSize Int?
+  fileName  String?
+
+  replyToMessageId String?
+  replyTo          WhatsAppMessage?  @relation("MessageReplies", fields: [replyToMessageId], references: [id], onDelete: SetNull)
+  replies          WhatsAppMessage[] @relation("MessageReplies")
+
+  isAiGenerated Boolean @default(false)
+
+  sentAt        DateTime?
+  deliveredAt   DateTime?
+  readAt        DateTime?
+  failedAt      DateTime?
+  failureReason String?
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId])
+  @@index([waMessageId])
+  @@index([direction])
+  @@index([status])
+  @@index([senderType])
+  @@index([contentType])
+  @@index([createdAt])
+  @@map("whatsapp_message")
+}
+
+model WhatsAppBroadcast {
+  id               String                  @id @default(uuid())
+  accountId        String
+  account          WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdById      String?
+  createdBy        User?                   @relation("WhatsAppBroadcastCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  name             String
+  templateName     String
+  templateLanguage String                  @default("en")
+  status           String                  @default("DRAFT")
+  totalRecipients  Int                     @default(0)
+  sentCount        Int                     @default(0)
+  deliveredCount   Int                     @default(0)
+  readCount        Int                     @default(0)
+  repliedCount     Int                     @default(0)
+  failedCount      Int                     @default(0)
+  scheduledAt      DateTime?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  recipients WhatsAppBroadcastRecipient[]
+
+  @@index([accountId])
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("whatsapp_broadcast")
+}
+
+model WhatsAppBroadcastRecipient {
+  id             String            @id @default(uuid())
+  broadcastId    String
+  broadcast      WhatsAppBroadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
+  contactId      String?
+  contact        WhatsAppContact?  @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  phone          String
+  templateParams Json?
+  status         String            @default("PENDING")
+  waMessageId    String?           @unique
+  sentAt         DateTime?
+  errorMessage   String?
+  createdAt      DateTime          @default(now())
+
+  @@index([broadcastId])
+  @@index([contactId])
+  @@index([status])
+  @@index([waMessageId])
+  @@map("whatsapp_broadcast_recipient")
+}
+
+model WhatsAppAutomation {
+  id            String                  @id @default(uuid())
+  accountId     String
+  account       WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdById   String?
+  createdBy     User?                   @relation("WhatsAppAutomationCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  name          String
+  isActive      Boolean                 @default(false)
+  triggerType   String
+  triggerConfig Json?
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  steps             WhatsAppAutomationStep[]
+  logs              WhatsAppAutomationLog[]
+  pendingExecutions WhatsAppAutomationPendingExecution[]
+
+  @@index([accountId])
+  @@index([isActive])
+  @@index([triggerType])
+  @@map("whatsapp_automation")
+}
+
+model WhatsAppAutomationStep {
+  id           String             @id @default(uuid())
+  automationId String
+  automation   WhatsAppAutomation @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  position     Int
+  parentStepId String?
+  branch       String?
+  stepType     String
+  stepConfig   Json
+  createdAt    DateTime           @default(now())
+
+  @@index([automationId])
+  @@index([position])
+  @@map("whatsapp_automation_step")
+}
+
+model WhatsAppAutomationLog {
+  id            String                  @id @default(uuid())
+  automationId  String
+  automation    WhatsAppAutomation      @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  accountId     String
+  account       WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  contactId     String?
+  contact       WhatsAppContact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  triggerEvent  String
+  status        String
+  stepsExecuted Json?
+  errorMessage  String?
+  createdAt     DateTime                @default(now())
+
+  @@index([automationId])
+  @@index([accountId])
+  @@index([contactId])
+  @@index([createdAt])
+  @@map("whatsapp_automation_log")
+}
+
+model WhatsAppAutomationPendingExecution {
+  id               String                  @id @default(uuid())
+  automationId     String
+  automation       WhatsAppAutomation      @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  accountId        String
+  account          WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  contactId        String?
+  contact          WhatsAppContact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  logId            String?
+  parentStepId     String?
+  branch           String?
+  nextStepPosition Int
+  context          Json?
+  runAt            DateTime
+  status           String                  @default("pending")
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  @@index([accountId])
+  @@index([automationId])
+  @@index([contactId])
+  @@index([runAt, status])
+  @@map("whatsapp_automation_pending_execution")
+}
+
+model WhatsAppTag {
+  id        String                  @id @default(uuid())
+  accountId String
+  account   WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  name      String
+  color     String?
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+
+  contacts WhatsAppContactTag[]
+
+  @@unique([accountId, name])
+  @@index([accountId])
+  @@map("whatsapp_tag")
+}
+
+model WhatsAppContactTag {
+  id         String          @id @default(uuid())
+  contactId  String
+  contact    WhatsAppContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  tagId      String
+  tag        WhatsAppTag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  assignedAt DateTime        @default(now())
+
+  @@unique([contactId, tagId])
+  @@index([contactId])
+  @@index([tagId])
+  @@map("whatsapp_contact_tag")
+}
+
+model WhatsAppQuickReply {
+  id        String                  @id @default(uuid())
+  accountId String
+  account   WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  shortcut  String
+  content   String                  @db.Text
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+
+  @@unique([accountId, shortcut])
+  @@index([accountId])
+  @@map("whatsapp_quick_reply")
+}
+
+model WhatsAppFlow {
+  id            String                  @id @default(uuid())
+  accountId     String
+  account       WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  name          String
+  status        String                  @default("draft")
+  triggerType   String
+  triggerConfig Json?
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  nodes WhatsAppFlowNode[]
+  runs  WhatsAppFlowRun[]
+
+  @@index([accountId])
+  @@index([status])
+  @@map("whatsapp_flow")
+}
+
+model WhatsAppFlowNode {
+  id        String       @id @default(uuid())
+  flowId    String
+  flow      WhatsAppFlow @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  nodeKey   String
+  nodeType  String
+  config    Json
+  createdAt DateTime     @default(now())
+
+  @@unique([flowId, nodeKey])
+  @@index([flowId])
+  @@map("whatsapp_flow_node")
+}
+
+model WhatsAppFlowRun {
+  id             String                  @id @default(uuid())
+  flowId         String
+  flow           WhatsAppFlow            @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  accountId      String
+  account        WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  contactId      String
+  contact        WhatsAppContact         @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  conversationId String?
+  conversation   WhatsAppConversation?   @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  status         String                  @default("active")
+  currentNodeKey String?
+  vars           Json?
+  startedAt      DateTime                @default(now())
+  endedAt        DateTime?
+  endReason      String?
+
+  @@index([accountId])
+  @@index([flowId])
+  @@index([contactId])
+  @@index([conversationId])
+  @@index([status])
+  @@map("whatsapp_flow_run")
+}
+
+model WhatsAppAiConfig {
+  id                          String                  @id @default(uuid())
+  accountId                   String                  @unique
+  account                     WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  provider                    String
+  model                       String
+  apiKey                      String
+  systemPrompt                String?                 @db.Text
+  isActive                    Boolean                 @default(false)
+  autoReplyEnabled            Boolean                 @default(false)
+  autoReplyMaxPerConversation Int                     @default(3)
+  handoffAgentId              String?
+  createdAt                   DateTime                @default(now())
+  updatedAt                   DateTime                @updatedAt
+
+  @@map("whatsapp_ai_config")
+}
+
+model WhatsAppWebhookEndpoint {
+  id           String                  @id @default(uuid())
+  accountId    String
+  account      WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  url          String
+  secret       String
+  events       String[]
+  isActive     Boolean                 @default(true)
+  failureCount Int                     @default(0)
+  disabledAt   DateTime?
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  @@index([accountId])
+  @@index([isActive])
+  @@map("whatsapp_webhook_endpoint")
+}
+
+model WhatsAppContactNote {
+  id        String          @id @default(uuid())
+  contactId String
+  contact   WhatsAppContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    User?           @relation("WhatsAppNoteAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  content   String          @db.Text
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([contactId])
+  @@map("whatsapp_contact_note")
+}
+
+model WhatsAppCustomField {
+  id        String                  @id @default(uuid())
+  accountId String
+  account   WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  name      String
+  type      String                  @default("text")
+  options   Json?
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+
+  values WhatsAppContactCustomValue[]
+
+  @@unique([accountId, name])
+  @@index([accountId])
+  @@map("whatsapp_custom_field")
+}
+
+model WhatsAppContactCustomValue {
+  id        String              @id @default(uuid())
+  contactId String
+  contact   WhatsAppContact     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  fieldId   String
+  field     WhatsAppCustomField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  value     String              @db.Text
+  updatedAt DateTime            @updatedAt
+
+  @@unique([contactId, fieldId])
+  @@index([contactId])
+  @@index([fieldId])
+  @@map("whatsapp_contact_custom_value")
+}
+
+model WhatsAppPipeline {
+  id        String                  @id @default(uuid())
+  accountId String
+  account   WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  name      String
+  isDefault Boolean                 @default(false)
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+
+  stages WhatsAppPipelineStage[]
+  deals  WhatsAppDeal[]
+
+  @@index([accountId])
+  @@map("whatsapp_pipeline")
+}
+
+model WhatsAppPipelineStage {
+  id         String           @id @default(uuid())
+  pipelineId String
+  pipeline   WhatsAppPipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  name       String
+  position   Int
+  color      String           @default("#3b82f6")
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  deals WhatsAppDeal[]
+
+  @@index([pipelineId])
+  @@index([position])
+  @@map("whatsapp_pipeline_stage")
+}
+
+model WhatsAppDeal {
+  id                String                  @id @default(uuid())
+  accountId         String
+  account           WhatsAppBusinessAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  pipelineId        String
+  pipeline          WhatsAppPipeline        @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  stageId           String
+  stage             WhatsAppPipelineStage   @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  contactId         String
+  contact           WhatsAppContact         @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  conversationId    String?
+  conversation      WhatsAppConversation?   @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  title             String
+  value             Decimal                 @default(0) @db.Decimal(14, 2)
+  currency          String                  @default("USD")
+  notes             String?                 @db.Text
+  expectedCloseDate DateTime?
+  status            String                  @default("active")
+  assignedUserId    String?
+  assignedUser      User?                   @relation("WhatsAppDealAssignedUser", fields: [assignedUserId], references: [id], onDelete: SetNull)
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+
+  activities WhatsAppDealActivity[]
+
+  @@index([accountId])
+  @@index([pipelineId])
+  @@index([stageId])
+  @@index([contactId])
+  @@index([status])
+  @@map("whatsapp_deal")
+}
+
+model WhatsAppDealActivity {
+  id        String       @id @default(uuid())
+  dealId    String
+  deal      WhatsAppDeal @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    User?        @relation("WhatsAppDealActivityAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  type      String
+  details   Json?
+  createdAt DateTime     @default(now())
+
+  @@index([dealId])
+  @@map("whatsapp_deal_activity")
+}
+
+model FollowUp {
+  id         String    @id @default(uuid())
+  leadId     String?
+  lead       Lead?     @relation(fields: [leadId], references: [id])
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  brokerId   String?
+  broker     Broker?   @relation(fields: [brokerId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  scheduledDate    DateTime
+  scheduledTime    DateTime?
+  status           FollowUpStatus @default(SCHEDULED)
+  type             String?
+  remarks          String?        @db.Text
+  completedAt      DateTime?
+  completedRemarks String?        @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([leadId])
+  @@index([customerId])
+  @@index([brokerId])
+  @@index([userId])
+  @@index([scheduledDate])
+  @@index([status])
+  @@map("follow_up")
+}
+
+model Note {
+  id         String    @id @default(uuid())
+  leadId     String?
+  lead       Lead?     @relation("LeadNotes", fields: [leadId], references: [id])
+  customerId String?
+  customer   Customer? @relation("CustomerNotes", fields: [customerId], references: [id])
+  brokerId   String?
+  broker     Broker?   @relation("BrokerNotes", fields: [brokerId], references: [id])
+  bookingId  String?
+  booking    Booking?  @relation("BookingNotes", fields: [bookingId], references: [id])
+
+  content            String      @db.Text
+  noteType           String? // e.g. 'NEGOTIATION', 'GENERAL'
+  isPinned           Boolean     @default(false)
+  statusAtTimeOfNote LeadStatus?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([leadId])
+  @@index([customerId])
+  @@index([brokerId])
+  @@index([bookingId])
+  @@index([userId])
+  @@map("note")
+}
+
+model Task {
+  id          String       @id @default(uuid())
+  title       String
+  description String?      @db.Text
+  type        String?
+  priority    TaskPriority @default(MEDIUM)
+  status      TaskStatus   @default(PENDING)
+  dueDate     DateTime?
+  completedAt DateTime?
+
+  assignedToId String
+  assignedTo   User   @relation("AssignedTo", fields: [assignedToId], references: [id])
+  createdById  String
+  createdBy    User   @relation("TaskCreator", fields: [createdById], references: [id])
+
+  leadId     String?
+  customerId String?
+  bookingId  String?
+
+  isAutoGenerated Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([assignedToId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([priority])
+  @@map("task")
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       NotificationType
+  title      String
+  body       String?
+  isRead     Boolean          @default(false)
+  readAt     DateTime?
+  entityType String?
+  entityId   String?
+  actionUrl  String?
+  metadata   Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+  @@map("notification")
+}
+
+model ActivityTimeline {
+  id         String    @id @default(uuid())
+  leadId     String?
+  lead       Lead?     @relation("LeadActivities", fields: [leadId], references: [id])
+  customerId String?
+  customer   Customer? @relation("CustomerActivities", fields: [customerId], references: [id])
+  brokerId   String?
+  broker     Broker?   @relation("BrokerActivities", fields: [brokerId], references: [id])
+
+  type        ActivityType
+  title       String
+  description String?      @db.Text
+  metadata    Json?
+  userId      String?
+
+  createdAt DateTime @default(now())
+
+  @@index([leadId, createdAt])
+  @@index([customerId, createdAt])
+  @@index([brokerId, createdAt])
+  @@index([type])
+  @@map("activity_timeline")
+}
+
+// NOTE: Announcement and Reminder models removed.
+// Announcements → Notification with type: ANNOUNCEMENT
+// Reminders → Auto-generated from FollowUp/SiteVisit/PaymentSchedule dates
+
+// ─────────────────────────────────────────────
+// 6. DOMAIN 4: PROJECT & INVENTORY
+// ─────────────────────────────────────────────
+
+model Builder {
+  id            String   @id @default(uuid())
+  name          String
+  companyName   String?
+  reraNumber    String?
+  contactPerson String?
+  phone         String?
+  email         String?
+  address       String?  @db.Text
+  website       String?
+  logoUrl       String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  projects Project[]
+
+  @@map("builder")
+}
+
+model Project {
+  id                 String              @id @default(uuid())
+  name               String
+  slug               String?             @unique
+  isCpProject        Boolean             @default(false)
+  builderId          String
+  builder            Builder             @relation(fields: [builderId], references: [id])
+  type               ProjectType
+  status             ProjectStatus       @default(UPCOMING)
+  constructionStatus ConstructionStatus?
+  possessionTimeline Json?
+  reraNumber         String?
+  description        String?             @db.Text
+
+  address       String? @db.Text
+  city          String?
+  state         String?
+  pincode       String?
+  latitude      Float?
+  longitude     Float?
+  googleMapsUrl String?
+
+  amenities   String[]
+  totalTowers Int?
+  totalUnits  Int?
+  totalFloors Int?
+
+  thumbnailUrl String?
+  brochureUrl  String?
+  isVisible    Boolean @default(true)
+  isActive     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  towers               Tower[]
+  priceSheets          PriceSheet[]
+  floorPlans           FloorPlan[]
+  paymentPlanTemplates PaymentPlanTemplate[]
+  offers               Offer[]
+  constructionUpdates  ConstructionUpdate[]
+  projectDocuments     ProjectDocument[]
+  projectAssignments   ProjectAssignment[]
+  leads                Lead[]
+  siteVisits           SiteVisit[]
+  distributionRules    LeadDistributionRule[]
+  brokerAssignments    BrokerProjectAssignment[]
+  inboundCommissions   InboundCommission[]
+  campaigns            MarketingCampaign[]
+  smsCampaigns         SmsCampaign[]
+  voiceCampaigns       VoiceCampaign[]
+  emailFlows           EmailFlow[]
+  smsFlows             SmsFlow[]
+
+  @@index([builderId])
+  @@index([status])
+  @@index([type])
+  @@index([city])
+  @@map("project")
+}
+
+model Tower {
+  id                 String              @id @default(uuid())
+  projectId          String
+  project            Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name               String
+  totalFloors        Int?
+  totalUnits         Int?
+  constructionStatus ConstructionStatus?
+  possessionTimeline Json?
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  floors           Floor[]
+  projectDocuments ProjectDocument[]
+  towerAssignments TowerAssignment[]
+  leads            Lead[]
+
+  @@index([projectId])
+  @@map("tower")
+}
+
+model TowerAssignment {
+  id      String @id @default(uuid())
+  towerId String
+  tower   Tower  @relation(fields: [towerId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([towerId, userId])
+  @@index([towerId])
+  @@index([userId])
+  @@map("tower_assignment")
+}
+
+model Floor {
+  id          String   @id @default(uuid())
+  towerId     String
+  tower       Tower    @relation(fields: [towerId], references: [id], onDelete: Cascade)
+  floorNumber Int
+  name        String?
+  totalUnits  Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  units Unit[]
+
+  @@unique([towerId, floorNumber])
+  @@index([towerId])
+  @@map("floor")
+}
+
+model Unit {
+  id                   String              @id @default(uuid())
+  floorId              String
+  floor                Floor               @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  unitNumber           String
+  type                 UnitType
+  status               UnitStatus          @default(AVAILABLE)
+  carpetArea           Decimal?
+  builtUpArea          Decimal?
+  superBuiltUpArea     Decimal?
+  basePrice            Decimal?
+  pricePerSqFt         Decimal?
+  totalPrice           Decimal?
+  commissionPercentage Decimal?
+  commissionAmount     Decimal?
+  facing               String?
+  balconies            Int?                @default(0)
+  parkingIncluded      Boolean             @default(false)
+  floorPlanUrl         String?
+  remarks              String?
+  constructionStatus   ConstructionStatus?
+  possessionTimeline   Json?
+
+  blockedAt     DateTime?
+  blockedById   String?
+  blockedBy     User?     @relation("UnitBlockedBy", fields: [blockedById], references: [id])
+  reservedAt    DateTime?
+  reservedForId String?
+  reservedFor   User?     @relation("UnitReservedFor", fields: [reservedForId], references: [id])
+  soldAt        DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  negotiations       Negotiation[]
+  bookings           Booking[]
+  unitHistory        UnitStatusHistory[]
+  leads              Lead[]
+  inboundCommissions InboundCommission[]
+
+  @@unique([floorId, unitNumber])
+  @@index([floorId])
+  @@index([status])
+  @@index([type])
+  @@map("unit")
+}
+
+model UnitStatusHistory {
+  id          String     @id @default(uuid())
+  unitId      String
+  unit        Unit       @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  fromStatus  UnitStatus
+  toStatus    UnitStatus
+  changedById String
+  reason      String?
+  changedAt   DateTime   @default(now())
+
+  @@index([unitId])
+  @@index([changedAt])
+  @@map("unit_status_history")
+}
+
+model PriceSheet {
+  id            String    @id @default(uuid())
+  projectId     String
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  version       String
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+  priceData     Json
+  documentUrl   String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([projectId])
+  @@index([isActive])
+  @@map("price_sheet")
+}
+
+model FloorPlan {
+  id        String    @id @default(uuid())
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  unitType  UnitType?
+  title     String
+  fileUrl   String
+  fileType  String?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([projectId])
+  @@map("floor_plan")
+}
+
+model PaymentPlanTemplate {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  isDefault   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  milestones PaymentPlanMilestone[]
+
+  @@index([projectId])
+  @@map("payment_plan_template")
+}
+
+model PaymentPlanMilestone {
+  id             String              @id @default(uuid())
+  templateId     String
+  template       PaymentPlanTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  name           String
+  percentage     Decimal
+  dueDescription String?
+  sequenceOrder  Int
+  createdAt      DateTime            @default(now())
+
+  @@index([templateId])
+  @@map("payment_plan_milestone")
+}
+
+model Offer {
+  id            String   @id @default(uuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title         String
+  description   String?  @db.Text
+  discountType  String?
+  discountValue Decimal?
+  validFrom     DateTime
+  validTo       DateTime
+  terms         String?  @db.Text
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([validFrom, validTo])
+  @@map("offer")
+}
+
+model ConstructionUpdate {
+  id              String   @id @default(uuid())
+  projectId       String
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?  @db.Text
+  stage           String?
+  progressPercent Int?
+  imageUrls       String[]
+  updatedById     String
+  updatedBy       User     @relation(fields: [updatedById], references: [id])
+  publishedAt     DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  @@index([projectId])
+  @@index([publishedAt])
+  @@map("construction_update")
+}
+
+model ProjectDocument {
+  id        String   @id @default(uuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  towerId   String?
+  tower     Tower?   @relation(fields: [towerId], references: [id], onDelete: Cascade)
+  title     String
+  category  String
+  fileUrl   String
+  fileType  String?
+  fileSize  Int?
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([towerId])
+  @@index([category])
+  @@map("project_document")
+}
+
+model ProjectAssignment {
+  id         String   @id @default(uuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       String?
+  assignedAt DateTime @default(now())
+  isActive   Boolean  @default(true)
+
+  @@unique([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
+  @@map("project_assignment")
+}
+
+// ─────────────────────────────────────────────
+// 7. DOMAIN 5: SITE VISIT & SALES PIPELINE
+// ─────────────────────────────────────────────
+
+model SiteVisit {
+  id          String  @id @default(uuid())
+  leadId      String
+  lead        Lead    @relation(fields: [leadId], references: [id])
+  projectId   String
+  project     Project @relation(fields: [projectId], references: [id])
+  salesExecId String
+  salesExec   User    @relation("SalesExec", fields: [salesExecId], references: [id])
+  createdById String
+  createdBy   User    @relation("SiteVisitCreator", fields: [createdById], references: [id])
+
+  scheduledDate      DateTime
+  scheduledTime      DateTime?
+  actualDate         DateTime?
+  arrivedAt          DateTime?
+  arriveLatitude     Float?
+  arriveLongitude    Float?
+  arriveNotifSentAt  DateTime?
+  destinationUrl     String?
+  status             SiteVisitStatus        @default(ASSIGNED)
+  interestLevel      CustomerInterestLevel?
+  meetingNotes       String?                @db.Text
+  budgetConfirmed    Decimal?
+  configInterest     String?
+  customerReaction   String?
+  customerObjections String?                @db.Text
+  closingProbability String?
+  completedAt        DateTime?
+  nextAction         String?
+  nextFollowUpDate   DateTime?
+  cancelReason       String?
+  rescheduledFrom    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  verification SiteVisitVerification?
+
+  @@index([leadId])
+  @@index([projectId])
+  @@index([salesExecId])
+  @@index([scheduledDate])
+  @@index([status])
+  @@map("site_visit")
+}
+
+model SiteVisitVerification {
+  id                  String    @id @default(uuid())
+  siteVisitId         String    @unique
+  siteVisit           SiteVisit @relation(fields: [siteVisitId], references: [id], onDelete: Cascade)
+  latitude            Float
+  longitude           Float
+  locationAccuracy    Float?
+  locationAddress     String?
+  siteVisitSelfieUrl  String
+  customerSelfieUrl   String?
+  additionalPhotoUrls String[]
+  gpsTrackingData     Json?
+  verifiedAt          DateTime  @default(now())
+
+  @@map("site_visit_verification")
+}
+
+model Negotiation {
+  id          String  @id @default(uuid())
+  leadId      String
+  lead        Lead    @relation(fields: [leadId], references: [id])
+  unitId      String?
+  unit        Unit?   @relation(fields: [unitId], references: [id])
+  salesExecId String
+  salesExec   User    @relation(fields: [salesExecId], references: [id])
+
+  askingPrice       Decimal?
+  offeredPrice      Decimal?
+  counterPrice      Decimal?
+  finalPrice        Decimal?
+  discountRequested Decimal?
+  discountType      String?
+  discountApproved  Decimal?
+
+  customerObjections String? @db.Text
+  managerSuggestion  String? @db.Text
+  negotiationNotes   String? @db.Text
+  nextActionPlan     String? @db.Text
+
+  status          NegotiationStatus @default(OPEN)
+  approvedById    String?
+  approvalRemarks String?
+  approvedAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings Booking[]
+
+  @@index([leadId])
+  @@index([unitId])
+  @@index([salesExecId])
+  @@index([status])
+  @@map("negotiation")
+}
+
+// NOTE: BookingRequest model removed.
+// Sales Exec creates Booking directly. Discounts go through FinancialApproval.
+
+// ─────────────────────────────────────────────
+// 8. DOMAIN 6: BOOKING & POST-SALES
+// ─────────────────────────────────────────────
+
+model Customer {
+  id               String    @id @default(uuid())
+  leadId           String    @unique
+  lead             Lead      @relation(fields: [leadId], references: [id])
+  firstName        String
+  lastName         String?
+  phone            String
+  alternatePhone   String?
+  email            String?
+  aadhaarNumber    String?
+  panNumber        String?
+  dateOfBirth      DateTime?
+  currentAddress   String?   @db.Text
+  permanentAddress String?   @db.Text
+  city             String?
+  state            String?
+  pincode          String?
+  occupation       String?
+  companyName      String?
+  annualIncome     Decimal?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  bookings              Booking[]
+  documents             CustomerDocument[]
+  followUps             FollowUp[]
+  notes                 Note[]                 @relation("CustomerNotes")
+  activities            ActivityTimeline[]     @relation("CustomerActivities")
+  whatsappConversations WhatsAppConversation[]
+  emailConversations    EmailConversation[]
+  smsConversations      SmsConversation[]
+
+  @@index([phone])
+  @@index([leadId])
+  @@map("customer")
+}
+
+model Booking {
+  id                  String        @id @default(uuid())
+  bookingNumber       String        @unique
+  customerId          String
+  customer            Customer      @relation(fields: [customerId], references: [id])
+  unitId              String
+  unit                Unit          @relation(fields: [unitId], references: [id])
+  source              BookingSource
+  salesExecId         String?
+  salesExec           User?         @relation("BookingSalesExec", fields: [salesExecId], references: [id])
+  closingManagerId    String?
+  closingManager      User?         @relation("BookingClosingManager", fields: [closingManagerId], references: [id])
+  assignedPostSalesId String?
+  assignedPostSales   User?         @relation("BookingPostSales", fields: [assignedPostSalesId], references: [id])
+  negotiationId       String?
+  negotiation         Negotiation?  @relation(fields: [negotiationId], references: [id])
+
+  agreedPrice          Decimal
+  tokenAmount          Decimal?
+  discountAmount       Decimal?
+  gstAmount            Decimal?
+  stampDutyAmount      Decimal?
+  registrationAmount   Decimal?
+  totalPayable         Decimal
+  commissionPercentage Decimal?
+  commissionAmount     Decimal?
+
+  status         BookingStatus @default(CONFIRMED)
+  bookingDate    DateTime      @default(now())
+  agreementDate  DateTime?
+  possessionDate DateTime?
+  cancelledAt    DateTime?
+  cancelReason   String?
+  refundAmount   Decimal?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  documents          CustomerDocument[]
+  paymentSchedules   PaymentSchedule[]
+  loanCase           LoanCase?
+  agreement          Agreement?
+  possession         PossessionHandover?
+  brokerageRecords   BrokerageRecord[]
+  collectionRecords  CollectionRecord[]
+  notes              Note[]              @relation("BookingNotes")
+  inboundCommissions InboundCommission[]
+
+  invoices         Invoice[]
+  approvalRequests ApprovalRequest[]
+
+  @@index([customerId])
+  @@index([unitId])
+  @@index([status])
+  @@index([bookingDate])
+  @@index([source])
+  @@map("booking")
+}
+
+model CustomerDocument {
+  id                 String                     @id @default(uuid())
+  customerId         String
+  customer           Customer                   @relation(fields: [customerId], references: [id])
+  bookingId          String?
+  booking            Booking?                   @relation(fields: [bookingId], references: [id])
+  type               DocumentType
+  title              String
+  description        String?                    @db.Text
+  fileUrl            String
+  fileType           String?
+  fileSize           Int?
+  verificationStatus DocumentVerificationStatus @default(PENDING)
+  verifiedById       String?
+  verifiedBy         User?                      @relation(fields: [verifiedById], references: [id])
+  verifiedAt         DateTime?
+  rejectionReason    String?
+  expiryDate         DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([bookingId])
+  @@index([type])
+  @@index([verificationStatus])
+  @@map("customer_document")
+}
+
+model PaymentSchedule {
+  id              String        @id @default(uuid())
+  bookingId       String
+  booking         Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  milestoneName   String
+  sequenceOrder   Int
+  amount          Decimal
+  dueDate         DateTime
+  status          PaymentStatus @default(PENDING)
+  paidAmount      Decimal       @default(0)
+  remainingAmount Decimal
+  lastPaymentDate DateTime?
+  overdueBy       Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions PaymentTransaction[]
+
+  @@index([bookingId])
+  @@index([dueDate])
+  @@index([status])
+  @@map("payment_schedule")
+}
+
+model PaymentTransaction {
+  id                String          @id @default(uuid())
+  paymentScheduleId String
+  paymentSchedule   PaymentSchedule @relation(fields: [paymentScheduleId], references: [id], onDelete: Cascade)
+  amount            Decimal
+  paymentMode       PaymentMode
+  paymentDate       DateTime
+  referenceNumber   String?
+  receiptNumber     String?         @unique
+  receiptUrl        String?
+  bankName          String?
+  bankBranch        String?
+  remarks           String?
+  recordedById      String
+  recordedBy        User            @relation(fields: [recordedById], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([paymentScheduleId])
+  @@index([paymentDate])
+  @@map("payment_transaction")
+}
+
+model LoanCase {
+  id                    String     @id @default(uuid())
+  bookingId             String     @unique
+  booking               Booking    @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  loanApplicationNumber String?
+  dsaName               String?
+  dsaContact            String?
+  bankName              String?
+  bankBranch            String?
+  bankContactPerson     String?
+  bankContactPhone      String?
+  loanAmount            Decimal?
+  approvedAmount        Decimal?
+  interestRate          Decimal?
+  tenure                Int?
+  emiAmount             Decimal?
+  status                LoanStatus @default(NOT_APPLIED)
+  applicationDate       DateTime?
+  approvalDate          DateTime?
+  disbursementDate      DateTime?
+  rejectionDate         DateTime?
+  rejectionReason       String?
+  loanDocumentUrls      String[]
+  sanctionLetterUrl     String?
+  pendingActions        String?    @db.Text
+  internalNotes         String?    @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("loan_case")
+}
+
+model Agreement {
+  id                 String          @id @default(uuid())
+  bookingId          String          @unique
+  booking            Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  status             AgreementStatus @default(NOT_STARTED)
+  agreementNumber    String?
+  subRegistrarOffice String?
+  appointmentTime    DateTime?
+  draftDate          DateTime?
+  stampDutyDate      DateTime?
+  registrationDate   DateTime?
+  completionDate     DateTime?
+  stampDutyAmount    Decimal?
+  registrationFee    Decimal?
+  stampDutyPaid      Boolean         @default(false)
+  registrationDone   Boolean         @default(false)
+  draftDocumentUrl   String?
+  finalDocumentUrl   String?
+  lawyerName         String?
+  lawyerContact      String?
+  remarks            String?         @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("agreement")
+}
+
+model PossessionHandover {
+  id                     String           @id @default(uuid())
+  bookingId              String           @unique
+  booking                Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  status                 PossessionStatus @default(NOT_READY)
+  expectedDate           DateTime?
+  scheduledDate          DateTime?
+  actualDate             DateTime?
+  handoverNotes          String?          @db.Text
+  electricityMeterNumber String?
+  waterMeterNumber       String?
+  parkingSlotNumber      String?
+  snagList               Json?
+  snagResolved           Boolean          @default(false)
+  occupancyCertUrl       String?
+  completionCertUrl      String?
+  handoverDocUrl         String?
+  keysHandedOver         Boolean          @default(false)
+  keyHandoverDate        DateTime?
+  handoverById           String?
+  handoverBy             User?            @relation(fields: [handoverById], references: [id])
+  customerFeedback       String?          @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("possession_handover")
+}
+
+// ─────────────────────────────────────────────
+// 9. DOMAIN 7: CHANNEL PARTNER & BROKERAGE
+// ─────────────────────────────────────────────
+
+model Broker {
+  id                String       @id @default(uuid())
+  brokerCode        String       @unique
+  name              String
+  companyName       String?
+  phone             String
+  alternatePhone    String?
+  email             String?
+  reraNumber        String?
+  reraState         String?
+  gstNumber         String?
+  address           String?      @db.Text
+  city              String?
+  state             String?
+  pincode           String?
+  serviceAreas      String[]
+  status            BrokerStatus @default(NEW)
+  subStatus         String?      @default("PENDING")
+  sourcingManagerId String?
+  sourcingManager   User?        @relation("SourcingManager", fields: [sourcingManagerId], references: [id])
+  profilePhotoUrl   String?
+  experience        Int?
+  specialization    String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  documents             BrokerDocument[]
+  projectAssignments    BrokerProjectAssignment[]
+  meetings              BrokerMeeting[]
+  referrals             BrokerReferral[]
+  brokerageRecords      BrokerageRecord[]
+  callRecords           CallRecord[]
+  followUps             FollowUp[]
+  notes                 Note[]                    @relation("BrokerNotes")
+  activities            ActivityTimeline[]        @relation("BrokerActivities")
+  whatsappConversations WhatsAppConversation[]
+  emailConversations    EmailConversation[]
+  smsConversations      SmsConversation[]
+  leads                 Lead[]
+  campaignRecipients    CampaignRecipient[]
+  smsRecipients         SmsRecipient[]
+
+  invoices Invoice[]
+
+  @@index([sourcingManagerId])
+  @@index([status])
+  @@index([city])
+  @@map("broker")
+}
+
+model BrokerDocument {
+  id         String    @id @default(uuid())
+  brokerId   String
+  broker     Broker    @relation(fields: [brokerId], references: [id], onDelete: Cascade)
+  title      String
+  type       String
+  fileUrl    String
+  fileType   String?
+  isVerified Boolean   @default(false)
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([brokerId])
+  @@map("broker_document")
+}
+
+model BrokerProjectAssignment {
+  id               String   @id @default(uuid())
+  brokerId         String
+  broker           Broker   @relation(fields: [brokerId], references: [id], onDelete: Cascade)
+  projectId        String
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  towerId          String?
+  isLocked         Boolean  @default(false)
+  dealDocuments    String[]
+  brokeragePercent Decimal?
+  brokerageFlat    Decimal?
+  closingManagerId String?
+  assignedAt       DateTime @default(now())
+  isActive         Boolean  @default(true)
+
+  @@unique([brokerId, projectId])
+  @@index([brokerId])
+  @@index([projectId])
+  @@map("broker_project_assignment")
+}
+
+model BrokerMeeting {
+  id                String    @id @default(uuid())
+  brokerId          String
+  broker            Broker    @relation(fields: [brokerId], references: [id])
+  userId            String
+  user              User      @relation(fields: [userId], references: [id])
+  scheduledDate     DateTime
+  actualDate        DateTime?
+  meetingNotes      String?   @db.Text
+  brokerInterest    String?
+  projectsDiscussed String[]
+  latitude          Float?
+  longitude         Float?
+  arriveLatitude    Float?
+  arriveLongitude   Float?
+  arrivedAt         DateTime?
+  destinationUrl    String?
+  selfieUrl         String?
+  status            String    @default("SCHEDULED")
+  nextMeetingDate   DateTime?
+  nextFollowUpDate  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([brokerId])
+  @@index([userId])
+  @@index([scheduledDate])
+  @@map("broker_meeting")
+}
+
+// ─────────────────────────────────────────────
+// NEW: TICKET-BASED APPROVAL SYSTEM
+// ─────────────────────────────────────────────
+
+model ApprovalRequest {
+  id          String                @id @default(uuid())
+  salesExecId String
+  salesExec   User                  @relation("ApprovalRequestExec", fields: [salesExecId], references: [id])
+  managerId   String
+  manager     User                  @relation("ApprovalRequestManager", fields: [managerId], references: [id])
+  status      ApprovalRequestStatus @default(REQUESTED)
+  type        ApprovalType          @default(DISCOUNT)
+  redoCount   Int                   @default(0)
+  bookingId   String?
+  booking     Booking?              @relation(fields: [bookingId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages ApprovalMessage[] @relation("RequestMessages")
+
+  @@index([salesExecId])
+  @@index([managerId])
+  @@index([status])
+  @@index([bookingId])
+  @@map("approval_request")
+}
+
+model ApprovalMessage {
+  id        String          @id @default(uuid())
+  requestId String
+  request   ApprovalRequest @relation("RequestMessages", fields: [requestId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User            @relation("ApprovalMessageSender", fields: [senderId], references: [id])
+
+  title       String
+  description String  @db.Text
+  fileUrl     String? // URL for the uploaded file/blob
+  metadata    Json? // Structured data for rich payloads (e.g. { documents: {name, url}[] })
+
+  createdAt DateTime @default(now())
+
+  @@index([requestId])
+  @@index([senderId])
+  @@map("approval_message")
+}
+
+model BrokerReferral {
+  id                String    @id @default(uuid())
+  brokerId          String
+  broker            Broker    @relation(fields: [brokerId], references: [id])
+  leadId            String?   @unique
+  customerName      String
+  customerPhone     String
+  customerEmail     String?
+  interestedProject String?
+  closingManagerId  String?
+  closingManager    User?     @relation("ReferralClosingManager", fields: [closingManagerId], references: [id])
+  status            String    @default("REFERRED")
+  bookingId         String?   @unique
+  referredAt        DateTime  @default(now())
+  contactedAt       DateTime?
+  bookedAt          DateTime?
+  remarks           String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([brokerId])
+  @@index([closingManagerId])
+  @@index([status])
+  @@map("broker_referral")
+}
+
+model BrokerageRecord {
+  id               String          @id @default(uuid())
+  brokerId         String
+  broker           Broker          @relation(fields: [brokerId], references: [id])
+  bookingId        String
+  booking          Booking         @relation(fields: [bookingId], references: [id])
+  bookingValue     Decimal
+  brokeragePercent Decimal?
+  brokerageAmount  Decimal
+  gstOnBrokerage   Decimal?
+  tdsDeducted      Decimal?
+  netPayable       Decimal
+  status           BrokerageStatus @default(PENDING)
+  approvedById     String?
+  approvedBy       User?           @relation("BrokerageRecordApprover", fields: [approvedById], references: [id])
+  approvedAt       DateTime?
+  paidAmount       Decimal         @default(0)
+  paidAt           DateTime?
+  paymentReference String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  settlement BrokerageSettlement?
+
+  @@index([brokerId])
+  @@index([bookingId])
+  @@index([status])
+  @@map("brokerage_record")
+}
+
+// ─────────────────────────────────────────────
+// 10. DOMAIN 8: ACCOUNTS & COLLECTIONS
+// ─────────────────────────────────────────────
+
+model CollectionRecord {
+  id                   String        @id @default(uuid())
+  bookingId            String
+  booking              Booking       @relation(fields: [bookingId], references: [id])
+  totalPayable         Decimal
+  totalCollected       Decimal       @default(0)
+  outstanding          Decimal
+  status               PaymentStatus @default(PENDING)
+  lastCollectionDate   DateTime?
+  lastCollectionAmount Decimal?
+  overdueDays          Int?          @default(0)
+  overdueAmount        Decimal?      @default(0)
+  isOverdue            Boolean       @default(false)
+  nextFollowUpDate     DateTime?
+  collectionRemarks    String?       @db.Text
+  assignedToId         String?
+  assignedTo           User?         @relation("CollectionAssignedTo", fields: [assignedToId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([isOverdue])
+  @@index([assignedToId])
+  @@map("collection_record")
+}
+
+model BrokerageSettlement {
+  id                String          @id @default(uuid())
+  brokerageRecordId String          @unique
+  brokerageRecord   BrokerageRecord @relation(fields: [brokerageRecordId], references: [id])
+  settlementAmount  Decimal
+  paymentMode       PaymentMode
+  paymentDate       DateTime?
+  paymentReference  String?
+  bankName          String?
+  accountNumber     String?
+  ifscCode          String?
+  accountHolderName String?
+  invoiceNumber     String?
+  invoiceUrl        String?
+  tdsAmount         Decimal?
+  otherDeductions   Decimal?
+  deductionRemarks  String?
+  status            BrokerageStatus @default(PENDING)
+  approvedById      String?
+  approvedBy        User?           @relation("SettlementApprover", fields: [approvedById], references: [id])
+  approvedAt        DateTime?
+  approvalRemarks   String?
+  processedById     String?
+  processedBy       User?           @relation("SettlementProcessor", fields: [processedById], references: [id])
+  processedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([paymentDate])
+  @@map("brokerage_settlement")
+}
+
+model Expense {
+  id               String          @id @default(uuid())
+  category         ExpenseCategory
+  title            String
+  description      String?         @db.Text
+  amount           Decimal
+  expenseDate      DateTime
+  period           String?
+  vendorName       String?
+  vendorContact    String?
+  paymentMode      PaymentMode?
+  paymentReference String?
+  isPaid           Boolean         @default(false)
+  paidAt           DateTime?
+  receiptUrl       String?
+  approvalStatus   ApprovalStatus  @default(PENDING)
+  requestedById    String
+  requestedBy      User            @relation("ExpenseRequester", fields: [requestedById], references: [id])
+  approvedById     String?
+  approvedBy       User?           @relation("ExpenseApprover", fields: [approvedById], references: [id])
+  approvedAt       DateTime?
+  rejectionReason  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([expenseDate])
+  @@index([approvalStatus])
+  @@index([requestedById])
+  @@map("expense")
+}
+
+model Invoice {
+  id            String        @id @default(uuid())
+  invoiceNumber String        @unique
+  type          String
+  bookingId     String?
+  booking       Booking?      @relation(fields: [bookingId], references: [id])
+  brokerId      String?
+  broker        Broker?       @relation(fields: [brokerId], references: [id])
+  amount        Decimal
+  gstAmount     Decimal?
+  totalAmount   Decimal
+  description   String?       @db.Text
+  lineItems     Json?
+  status        InvoiceStatus @default(DRAFT)
+  invoiceDate   DateTime      @default(now())
+  dueDate       DateTime?
+  paidDate      DateTime?
+  documentUrl   String?
+  createdById   String
+  createdBy     User          @relation(fields: [createdById], references: [id])
+  remarks       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([invoiceDate])
+  @@map("invoice")
+}
+
+model FinancialApproval {
+  id                 String          @id @default(uuid())
+  type               ApprovalType
+  entityType         String
+  entityId           String
+  title              String
+  description        String?         @db.Text
+  amount             Decimal?
+  requestedById      String
+  requestedBy        User            @relation("ApprovalRequester", fields: [requestedById], references: [id])
+  requestedAt        DateTime        @default(now())
+  requestRemarks     String?         @db.Text
+  status             ApprovalStatus  @default(PENDING)
+  currentLevel       Int             @default(1)
+  level1ApproverById String?
+  level1Approver     User?           @relation("ApprovalLevel1", fields: [level1ApproverById], references: [id])
+  level1Status       ApprovalStatus?
+  level1Remarks      String?
+  level1At           DateTime?
+  level2ApproverById String?
+  level2Approver     User?           @relation("ApprovalLevel2", fields: [level2ApproverById], references: [id])
+  level2Status       ApprovalStatus?
+  level2Remarks      String?
+  level2At           DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([requestedById])
+  @@index([entityType, entityId])
+  @@map("financial_approval")
+}
+
+// ─────────────────────────────────────────────
+// 11. DOMAIN 9: DASHBOARD CACHE
+// ─────────────────────────────────────────────
+
+model DashboardCache {
+  id            String   @id @default(uuid())
+  dashboardType String
+  widgetKey     String
+  period        String
+  value         Json
+  computedAt    DateTime @default(now())
+  expiresAt     DateTime
+
+  @@unique([dashboardType, widgetKey, period])
+  @@index([dashboardType])
+  @@index([expiresAt])
+  @@map("dashboard_cache")
+}
+
+// ─────────────────────────────────────────────
+// 12. DOMAIN 10: INTERNAL COMMUNICATION
+// ─────────────────────────────────────────────
+
+model ChatRoom {
+  id           String       @id @default(uuid())
+  type         ChatRoomType
+  name         String?
+  description  String?
+  departmentId String?
+  department   Department?  @relation(fields: [departmentId], references: [id])
+  avatarUrl    String?
+  isActive     Boolean      @default(true)
+  createdById  String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  members  ChatRoomMember[]
+  messages ChatMessage[]
+
+  @@index([type])
+  @@index([departmentId])
+  @@map("chat_room")
+}
+
+model ChatRoomMember {
+  id         String    @id @default(uuid())
+  chatRoomId String
+  chatRoom   ChatRoom  @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       String    @default("MEMBER")
+  lastReadAt DateTime?
+  isMuted    Boolean   @default(false)
+  joinedAt   DateTime  @default(now())
+  leftAt     DateTime?
+
+  @@unique([chatRoomId, userId])
+  @@index([chatRoomId])
+  @@index([userId])
+  @@map("chat_room_member")
+}
+
+model ChatMessage {
+  id             String        @id @default(uuid())
+  chatRoomId     String
+  chatRoom       ChatRoom      @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User          @relation(fields: [senderId], references: [id])
+  content        String        @db.Text
+  attachmentUrl  String?
+  attachmentType String?
+  attachmentName String?
+  replyToId      String?
+  replyTo        ChatMessage?  @relation("MessageReply", fields: [replyToId], references: [id])
+  replies        ChatMessage[] @relation("MessageReply")
+  isEdited       Boolean       @default(false)
+  isDeleted      Boolean       @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([chatRoomId, createdAt])
+  @@index([senderId])
+  @@map("chat_message")
+}
+
+// ─────────────────────────────────────────────
+// 13. DOMAIN 11: POST-SALES COMMISSIONS
+// ─────────────────────────────────────────────
+
+model InboundCommission {
+  id        String   @id @default(uuid())
+  unitId    String
+  unit      Unit     @relation(fields: [unitId], references: [id])
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+  bookingId String?
+  booking   Booking? @relation(fields: [bookingId], references: [id])
+
+  commissionAmount Decimal
+  status           InboundCommissionStatus @default(PENDING)
+
+  receivedAt   DateTime?
+  receivedById String?
+  receivedBy   User?     @relation("ReceivedInboundCommissions", fields: [receivedById], references: [id])
+  remarks      String?   @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([unitId])
+  @@index([projectId])
+  @@index([bookingId])
+  @@index([status])
+  @@map("inbound_commission")
+}
+
+// ─────────────────────────────────────────────
+// 14. DOMAIN 12: MARKETING & CAMPAIGNS
+// ─────────────────────────────────────────────
+
+model MarketingIntegration {
+  id        String            @id @default(uuid())
+  provider  EmailProviderType
+  name      String
+  isActive  Boolean           @default(true)
+  isDefault Boolean           @default(false)
+
+  // Encrypted Provider Credentials
+  apiKey            String?
+  awsAccessKeyId    String?
+  awsSecretKey      String?
+  awsRegion         String?
+  mailchimpServer   String?
+  mailgunDomain     String?
+  mailgunRegion     String?
+  oauthClientId     String?
+  oauthClientSecret String?
+  oauthRefreshToken String?
+  oauthTenantId     String?
+  googleAppPassword String?
+
+  fromEmail String
+  fromName  String
+  replyTo   String?
+
+  webhookSecret String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  campaigns     MarketingCampaign[]
+  senderDomains MarketingSenderDomain[]
+  senderPools   CampaignSenderPool[]
+
+  @@index([provider])
+  @@index([isActive])
+  @@map("marketing_integration")
+}
+
+model MarketingSenderDomain {
+  id            String               @id @default(uuid())
+  integrationId String
+  integration   MarketingIntegration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  fromEmail String
+  fromName  String
+  domain    String
+  replyTo   String?
+
+  dailyQuota   Int     @default(2000)
+  sentToday    Int     @default(0)
+  isWarmupMode Boolean @default(false)
+  isVerified   Boolean @default(false)
+  isActive     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaignPools CampaignSenderPool[]
+
+  @@unique([integrationId, fromEmail])
+  @@index([integrationId, isActive])
+  @@index([domain])
+  @@index([fromEmail])
+  @@map("marketing_sender_domain")
+}
+
+model EmailTemplate {
+  id              String  @id @default(uuid())
+  name            String
+  subject         String
+  category        String // "PROJECT_LAUNCH", "PRICE_DROP", "FESTIVE", "CP_COMMISSION", "NEWSLETTER"
+  htmlBody        String  @db.Text
+  plainText       String? @db.Text
+  previewImageUrl String?
+  isSystem        Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaigns MarketingCampaign[]
+
+  @@index([category])
+  @@map("email_template")
+}
+
+model MarketingCampaign {
+  id             String             @id @default(uuid())
+  title          String
+  channel        MarketingChannel   @default(EMAIL)
+  status         CampaignStatus     @default(DRAFT)
+  providerType   EmailProviderType  @default(SYSTEM_DEFAULT)
+  audienceSource AudienceSourceType @default(CRM_DATABASE)
+
+  // Scope: Brokerage vs Channel Partner
+  isCpCampaign   Boolean  @default(false)
+  allocationMode String   @default("AUTO_EVEN")
+  projectId      String?
+  project        Project? @relation(fields: [projectId], references: [id])
+
+  integrationId String?
+  integration   MarketingIntegration? @relation(fields: [integrationId], references: [id])
+
+  templateId String?
+  template   EmailTemplate? @relation(fields: [templateId], references: [id])
+
+  subject     String
+  fromName    String
+  fromEmail   String
+  replyTo     String?
+  htmlContent String  @db.Text
+
+  // Dynamic filter JSON (e.g. { temperatures: ["HOT"], statuses: ["INTERESTED"], minBudget: 5000000 })
+  audienceFilters Json?
+
+  // Aggregate Performance Metrics
+  totalRecipients   Int @default(0)
+  sentCount         Int @default(0)
+  deliveredCount    Int @default(0)
+  openedCount       Int @default(0)
+  clickedCount      Int @default(0)
+  bouncedCount      Int @default(0)
+  complaintCount    Int @default(0)
+  unsubscribedCount Int @default(0)
+
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  createdById String?
+  createdBy   User?   @relation("CampaignCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipients         CampaignRecipient[]
+  senderPools        CampaignSenderPool[]
+  trackingEvents     EmailTrackingEvent[]
+  emailConversations EmailConversation[]
+
+  @@index([status])
+  @@index([channel])
+  @@index([projectId])
+  @@index([integrationId])
+  @@index([createdAt])
+  @@map("marketing_campaign")
+}
+
+model CampaignSenderPool {
+  id         String            @id @default(uuid())
+  campaignId String
+  campaign   MarketingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  senderDomainId String?
+  senderDomain   MarketingSenderDomain? @relation(fields: [senderDomainId], references: [id], onDelete: SetNull)
+
+  integrationId String?
+  integration   MarketingIntegration? @relation(fields: [integrationId], references: [id], onDelete: SetNull)
+
+  domain    String?
+  fromEmail String?
+  fromName  String?
+  provider  String?
+
+  weight              Int    @default(1)
+  allocatedRecipients Int    @default(0)
+  sentCount           Int    @default(0)
+  deliveredCount      Int    @default(0)
+  failedCount         Int    @default(0)
+  status              String @default("QUEUED")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipients CampaignRecipient[]
+
+  @@index([campaignId, senderDomainId])
+  @@index([campaignId, integrationId])
+  @@index([campaignId, status])
+  @@map("campaign_sender_pool")
+}
+
+model CampaignRecipient {
+  id         String            @id @default(uuid())
+  campaignId String
+  campaign   MarketingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  senderPoolId        String?
+  senderPool          CampaignSenderPool? @relation(fields: [senderPoolId], references: [id], onDelete: SetNull)
+  assignedSenderEmail String?
+  assignedProvider    String?
+
+  leadId String?
+  lead   Lead?   @relation(fields: [leadId], references: [id])
+
+  brokerId String?
+  broker   Broker? @relation(fields: [brokerId], references: [id])
+
+  email         String
+  name          String?
+  phone         String?
+  status        RecipientDeliveryStatus @default(QUEUED)
+  source        AudienceSourceType      @default(CRM_DATABASE)
+  providerMsgId String?
+
+  sentAt         DateTime?
+  deliveredAt    DateTime?
+  firstOpenedAt  DateTime?
+  openCount      Int       @default(0)
+  firstClickedAt DateTime?
+  clickCount     Int       @default(0)
+  bouncedAt      DateTime?
+  bounceReason   String?
+  mergeData      Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([campaignId, status])
+  @@index([senderPoolId])
+  @@index([email])
+  @@index([leadId])
+  @@map("campaign_recipient")
+}
+
+model EmailTrackingEvent {
+  id          String            @id @default(uuid())
+  campaignId  String
+  campaign    MarketingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  recipientId String
+
+  eventType  String // "OPEN", "CLICK", "BOUNCE", "UNSUBSCRIBE"
+  urlClicked String?
+  ipAddress  String?
+  userAgent  String?
+  timestamp  DateTime @default(now())
+
+  @@index([campaignId, eventType])
+  @@index([recipientId])
+  @@map("email_tracking_event")
+}
+
+model MarketingUnsubscribe {
+  id         String           @id @default(uuid())
+  email      String           @unique
+  reason     String?
+  campaignId String?
+  channel    MarketingChannel @default(EMAIL)
+  createdAt  DateTime         @default(now())
+
+  @@map("marketing_unsubscribe")
+}
+
+// ─────────────────────────────────────────────
+// 14b. EMAIL FLOWS, INBOUND REPLIES & AI CONCIERGE
+// ─────────────────────────────────────────────
+
+model EmailFlow {
+  id            String   @id @default(uuid())
+  name          String
+  description   String?
+  status        String   @default("draft") // "draft" | "active" | "archived"
+  triggerType   String   @default("keyword_match") // "keyword_match" | "any_reply" | "campaign_reply"
+  triggerConfig Json? // { keywords: ["visit", "price"], matchMode: "contains" | "exact" }
+  isGlobal      Boolean  @default(true)
+  campaignIds   String[] // Array of specific campaign IDs if not global
+  projectId     String?
+  project       Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nodes EmailFlowNode[]
+  runs  EmailFlowRun[]
+
+  @@index([status])
+  @@index([projectId])
+  @@map("email_flow")
+}
+
+model EmailFlowNode {
+  id        String    @id @default(uuid())
+  flowId    String
+  flow      EmailFlow @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  nodeKey   String
+  nodeType  String // "start" | "send_email_reply" | "ai_agent" | "update_lead_status" | "add_tag" | "remove_tag" | "handoff_presales" | "condition" | "wait_delay" | "end"
+  config    Json
+  positionX Float?
+  positionY Float?
+  createdAt DateTime  @default(now())
+
+  @@unique([flowId, nodeKey])
+  @@index([flowId])
+  @@map("email_flow_node")
+}
+
+model EmailFlowRun {
+  id             String    @id @default(uuid())
+  flowId         String
+  flow           EmailFlow @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  recipientId    String?
+  campaignId     String?
+  leadId         String?
+  status         String    @default("active") // "active" | "completed" | "failed"
+  currentNodeKey String?
+  inboundSubject String?
+  inboundBody    String?   @db.Text
+  outboundReply  String?   @db.Text
+  vars           Json?
+  startedAt      DateTime  @default(now())
+  endedAt        DateTime?
+
+  @@index([flowId])
+  @@index([recipientId])
+  @@index([campaignId])
+  @@index([status])
+  @@map("email_flow_run")
+}
+
+model EmailTag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  color     String   @default("#8B5CF6")
+  createdAt DateTime @default(now())
+
+  @@map("email_tag")
+}
+
+model EmailInboundMessage {
+  id                 String   @id @default(uuid())
+  fromEmail          String
+  toEmail            String
+  subject            String?
+  textBody           String?  @db.Text
+  htmlBody           String?  @db.Text
+  headers            Json?
+  provider           String // "SENDGRID" | "AWS_SES" | "BREVO" | "MAILCHIMP" | "UNIVERSAL"
+  providerMsgId      String?
+  inReplyTo          String?
+  matchedRecipientId String?
+  matchedCampaignId  String?
+  matchedLeadId      String?
+  status             String   @default("PROCESSED") // "RECEIVED" | "PROCESSED" | "UNMATCHED"
+  createdAt          DateTime @default(now())
+
+  @@index([fromEmail])
+  @@index([toEmail])
+  @@index([matchedRecipientId])
+  @@index([matchedCampaignId])
+  @@map("email_inbound_message")
+}
+
+model EmailConversation {
+  id           String  @id @default(uuid())
+  contactEmail String
+  contactName  String?
+  subject      String?
+
+  leadId     String?
+  lead       Lead?     @relation(fields: [leadId], references: [id])
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  brokerId   String?
+  broker     Broker?   @relation(fields: [brokerId], references: [id])
+
+  agentUserId String?
+  agent       User?   @relation("EmailConversationAgent", fields: [agentUserId], references: [id])
+
+  status              String    @default("open") // "open" | "pending" | "closed"
+  lastMessageText     String?   @db.Text
+  lastMessageAt       DateTime?
+  unreadCount         Int       @default(0)
+  aiAutoReplyDisabled Boolean   @default(false)
+  aiReplyCount        Int       @default(0)
+
+  // Dedicated Provider & Domain thread continuity
+  assignedProvider    String             @default("SYSTEM_DEFAULT") // "SENDGRID" | "AWS_SES" | "BREVO" | "MAILCHIMP" | "SYSTEM_DEFAULT"
+  assignedSenderEmail String? // e.g. "deals@skyline-towers.ae"
+  assignedSenderName  String? // e.g. "Skyline Sales Team"
+  campaignId          String?
+  campaign            MarketingCampaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  recipientId         String?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages EmailMessage[]
+
+  @@index([contactEmail])
+  @@index([status])
+  @@index([leadId])
+  @@index([customerId])
+  @@index([brokerId])
+  @@index([agentUserId])
+  @@index([lastMessageAt])
+  @@map("email_conversation")
+}
+
+model EmailMessage {
+  id             String            @id @default(uuid())
+  conversationId String
+  conversation   EmailConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  direction  String // "INBOUND" | "OUTBOUND"
+  senderType String  @default("agent") // "agent" | "bot" | "contact"
+  senderName String?
+  fromEmail  String
+  toEmail    String
+  subject    String?
+  bodyText   String? @db.Text
+  bodyHtml   String? @db.Text
+
+  status        String  @default("SENT") // "PENDING" | "SENT" | "DELIVERED" | "OPENED" | "CLICKED" | "FAILED"
+  provider      String? // "SENDGRID" | "AWS_SES" | "BREVO" | "MAILCHIMP" | "SIMULATOR"
+  providerMsgId String? @unique
+  inReplyTo     String?
+
+  attachments   Json? // Array of { name: string, url: string, size?: number, contentType?: string }
+  isAiGenerated Boolean @default(false)
+
+  sentAt        DateTime?
+  deliveredAt   DateTime?
+  openedAt      DateTime?
+  failedAt      DateTime?
+  failureReason String?
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId])
+  @@index([direction])
+  @@index([status])
+  @@index([providerMsgId])
+  @@index([createdAt])
+  @@map("email_message")
+}
+
+model EmailAiConfig {
+  id                  String   @id @default(uuid())
+  provider            String   @default("groq") // "groq" | "openai"
+  model               String   @default("openai/gpt-oss-120b")
+  apiKey              String? // AES-256 encrypted
+  systemPrompt        String?  @db.Text
+  isActive            Boolean  @default(true)
+  autoReplyEnabled    Boolean  @default(false)
+  autoReplyMaxPerLead Int      @default(3)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("email_ai_config")
+}
+
+// ─────────────────────────────────────────────
+// 15. DOMAIN 12 EXTENSION: SMS & BROADCASTS
+// ─────────────────────────────────────────────
+
+enum SmsProviderType {
+  TWILIO
+  AWS_SNS
+  SINCH
+  GUPSHUP
+  MULTI_PROVIDER
+  INFOBIP
+  VONAGE
+  TELNYX
+  PLIVO
+  BIRD
+}
+
+model SmsIntegration {
+  id        String          @id @default(uuid())
+  provider  SmsProviderType
+  name      String
+  isActive  Boolean         @default(true)
+  isDefault Boolean         @default(false)
+
+  // Encrypted Provider Credentials
+  accountSid          String?
+  authToken           String?
+  messagingServiceSid String?
+  apiKey              String?
+  servicePlanId       String?
+  awsAccessKeyId      String?
+  awsSecretKey        String?
+  awsRegion           String?
+  dltEntityId         String?
+  baseUrl             String?
+  apiSecret           String?
+  authId              String?
+
+  fromSender String // Phone number (e.g. +14155550199) or Sender Header (e.g. SKYLIN)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaigns     SmsCampaign[]
+  senderNumbers SmsSenderNumber[]
+  campaignPools CampaignSmsSenderPool[]
+
+  @@index([provider])
+  @@index([isActive])
+  @@map("sms_integration")
+}
+
+model SmsSenderNumber {
+  id            String         @id @default(uuid())
+  integrationId String
+  integration   SmsIntegration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  phoneNumber String? // E.164 phone number e.g. "+14155550199"
+  senderId    String? // Alphanumeric sender ID / DLT Header e.g. "SKYLIN"
+  provider    String? // "TWILIO" | "AWS_SNS" | "SINCH" | "GUPSHUP"
+
+  dailyQuota Int     @default(5000)
+  sentToday  Int     @default(0)
+  isVerified Boolean @default(true)
+  isActive   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaignPools CampaignSmsSenderPool[]
+
+  @@unique([integrationId, phoneNumber])
+  @@index([integrationId, isActive])
+  @@index([phoneNumber])
+  @@index([senderId])
+  @@map("sms_sender_number")
+}
+
+model SmsTemplate {
+  id            String  @id @default(uuid())
+  name          String
+  category      String // "PROJECT_LAUNCH", "SITE_VISIT", "PRICE_DROP", "FESTIVE", "CP_COMMISSION"
+  textContent   String  @db.Text
+  dltTemplateId String?
+  isSystem      Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@map("sms_template")
+}
+
+model SmsCampaign {
+  id             String             @id @default(uuid())
+  title          String
+  channel        MarketingChannel   @default(SMS)
+  status         CampaignStatus     @default(DRAFT)
+  providerType   SmsProviderType    @default(TWILIO)
+  audienceSource AudienceSourceType @default(CRM_DATABASE)
+
+  // Scope: Brokerage vs Channel Partner
+  isCpCampaign   Boolean  @default(false)
+  allocationMode String   @default("AUTO_EVEN")
+  projectId      String?
+  project        Project? @relation(fields: [projectId], references: [id])
+
+  integrationId String?
+  integration   SmsIntegration? @relation(fields: [integrationId], references: [id])
+
+  fromSender     String
+  messageContent String  @db.Text
+  dltTemplateId  String?
+
+  audienceFilters Json?
+
+  // Aggregate Metrics
+  totalRecipients   Int @default(0)
+  sentCount         Int @default(0)
+  deliveredCount    Int @default(0)
+  clickedCount      Int @default(0)
+  failedCount       Int @default(0)
+  totalSegmentsSent Int @default(0)
+
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  createdById String?
+  createdBy   User?   @relation("SmsCampaignCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipients       SmsRecipient[]
+  senderPools      CampaignSmsSenderPool[]
+  shortLinks       SmsShortLink[]
+  trackingEvents   SmsTrackingEvent[]
+  smsConversations SmsConversation[]
+
+  @@index([status])
+  @@index([channel])
+  @@index([projectId])
+  @@index([integrationId])
+  @@index([createdAt])
+  @@map("sms_campaign")
+}
+
+model CampaignSmsSenderPool {
+  id         String      @id @default(uuid())
+  campaignId String
+  campaign   SmsCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  senderNumberId String?
+  senderNumber   SmsSenderNumber? @relation(fields: [senderNumberId], references: [id], onDelete: SetNull)
+
+  integrationId String?
+  integration   SmsIntegration? @relation(fields: [integrationId], references: [id], onDelete: SetNull)
+
+  phoneNumber String?
+  senderId    String?
+  provider    String?
+
+  weight              Int    @default(1)
+  allocatedRecipients Int    @default(0)
+  sentCount           Int    @default(0)
+  deliveredCount      Int    @default(0)
+  failedCount         Int    @default(0)
+  status              String @default("QUEUED") // "QUEUED" | "STREAMING" | "COMPLETED" | "FAILED"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipients SmsRecipient[]
+
+  @@index([campaignId, senderNumberId])
+  @@index([campaignId, integrationId])
+  @@index([campaignId, status])
+  @@map("campaign_sms_sender_pool")
+}
+
+model SmsRecipient {
+  id         String      @id @default(uuid())
+  campaignId String
+  campaign   SmsCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  senderPoolId        String?
+  senderPool          CampaignSmsSenderPool? @relation(fields: [senderPoolId], references: [id], onDelete: SetNull)
+  assignedSenderPhone String?
+  assignedProvider    String?
+
+  leadId String?
+  lead   Lead?   @relation(fields: [leadId], references: [id])
+
+  brokerId String?
+  broker   Broker? @relation(fields: [brokerId], references: [id])
+
+  phone         String
+  name          String?
+  status        RecipientDeliveryStatus @default(QUEUED)
+  source        AudienceSourceType      @default(CRM_DATABASE)
+  providerMsgId String?
+  segmentsCount Int                     @default(1)
+
+  sentAt         DateTime?
+  deliveredAt    DateTime?
+  firstClickedAt DateTime?
+  clickCount     Int       @default(0)
+  failedAt       DateTime?
+  failReason     String?
+  mergeData      Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([campaignId, status])
+  @@index([senderPoolId])
+  @@index([phone])
+  @@index([leadId])
+  @@index([brokerId])
+  @@map("sms_recipient")
+}
+
+model SmsShortLink {
+  id             String      @id @default(uuid())
+  code           String      @unique // e.g. "x9k2m" -> resolves /s/x9k2m
+  destinationUrl String      @db.Text
+  campaignId     String
+  campaign       SmsCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  recipientId    String
+  clicksCount    Int         @default(0)
+  createdAt      DateTime    @default(now())
+
+  @@index([code])
+  @@index([campaignId])
+  @@map("sms_short_link")
+}
+
+model SmsTrackingEvent {
+  id          String      @id @default(uuid())
+  campaignId  String
+  campaign    SmsCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  recipientId String
+
+  eventType  String // "CLICK"
+  urlClicked String?
+  ipAddress  String?
+  userAgent  String?
+  timestamp  DateTime @default(now())
+
+  @@index([campaignId, eventType])
+  @@index([recipientId])
+  @@map("sms_tracking_event")
+}
+
+// ─────────────────────────────────────────────
+// 15b. SMS FLOWS, INBOUND REPLIES & AI CONCIERGE
+// ─────────────────────────────────────────────
+
+model SmsFlow {
+  id            String   @id @default(uuid())
+  name          String
+  description   String?
+  status        String   @default("draft") // "draft" | "active" | "archived"
+  triggerType   String   @default("keyword_match") // "keyword_match" | "any_reply" | "campaign_reply"
+  triggerConfig Json? // { keywords: ["visit", "price"], matchMode: "contains" | "exact" }
+  isGlobal      Boolean  @default(true)
+  campaignIds   String[] // Array of specific campaign IDs if not global
+  projectId     String?
+  project       Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nodes SmsFlowNode[]
+  runs  SmsFlowRun[]
+
+  @@index([status])
+  @@index([projectId])
+  @@map("sms_flow")
+}
+
+model SmsFlowNode {
+  id        String   @id @default(uuid())
+  flowId    String
+  flow      SmsFlow  @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  nodeKey   String
+  nodeType  String // "start" | "send_sms_reply" | "ai_agent" | "update_lead_status" | "add_tag" | "remove_tag" | "handoff_presales" | "condition" | "wait_delay" | "end"
+  config    Json
+  positionX Float?
+  positionY Float?
+  createdAt DateTime @default(now())
+
+  @@unique([flowId, nodeKey])
+  @@index([flowId])
+  @@map("sms_flow_node")
+}
+
+model SmsFlowRun {
+  id             String    @id @default(uuid())
+  flowId         String
+  flow           SmsFlow   @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  recipientId    String?
+  campaignId     String?
+  leadId         String?
+  status         String    @default("active") // "active" | "completed" | "failed"
+  currentNodeKey String?
+  inboundPhone   String?
+  inboundBody    String?   @db.Text
+  outboundReply  String?   @db.Text
+  vars           Json?
+  startedAt      DateTime  @default(now())
+  endedAt        DateTime?
+
+  @@index([flowId])
+  @@index([recipientId])
+  @@index([campaignId])
+  @@index([status])
+  @@map("sms_flow_run")
+}
+
+model SmsTag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  color     String   @default("#10B981")
+  createdAt DateTime @default(now())
+
+  @@map("sms_tag")
+}
+
+model SmsInboundMessage {
+  id                 String   @id @default(uuid())
+  fromPhone          String
+  toPhone            String
+  textBody           String?  @db.Text
+  headers            Json?
+  provider           String // "TWILIO" | "AWS_SNS" | "SINCH" | "GUPSHUP" | "SIMULATOR"
+  providerMsgId      String?
+  matchedRecipientId String?
+  matchedCampaignId  String?
+  matchedLeadId      String?
+  status             String   @default("PROCESSED") // "RECEIVED" | "PROCESSED" | "UNMATCHED"
+  createdAt          DateTime @default(now())
+
+  @@index([fromPhone])
+  @@index([toPhone])
+  @@index([matchedRecipientId])
+  @@index([matchedCampaignId])
+  @@map("sms_inbound_message")
+}
+
+model SmsConversation {
+  id           String  @id @default(uuid())
+  contactPhone String
+  contactName  String?
+
+  leadId     String?
+  lead       Lead?     @relation(fields: [leadId], references: [id])
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  brokerId   String?
+  broker     Broker?   @relation(fields: [brokerId], references: [id])
+
+  agentUserId String?
+  agent       User?   @relation("SmsConversationAgent", fields: [agentUserId], references: [id])
+
+  status              String    @default("open") // "open" | "pending" | "closed"
+  lastMessageText     String?   @db.Text
+  lastMessageAt       DateTime?
+  unreadCount         Int       @default(0)
+  aiAutoReplyDisabled Boolean   @default(false)
+  aiReplyCount        Int       @default(0)
+
+  // Dedicated Provider & Phone thread continuity invariant
+  assignedProvider    String       @default("TWILIO") // "TWILIO" | "AWS_SNS" | "SINCH" | "GUPSHUP"
+  assignedSenderPhone String? // e.g. "+14155550199" or "SKYLIN"
+  assignedSenderId    String?
+  campaignId          String?
+  campaign            SmsCampaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  recipientId         String?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages SmsMessage[]
+
+  @@index([contactPhone])
+  @@index([status])
+  @@index([leadId])
+  @@index([customerId])
+  @@index([brokerId])
+  @@index([agentUserId])
+  @@index([lastMessageAt])
+  @@map("sms_conversation")
+}
+
+model SmsMessage {
+  id             String          @id @default(uuid())
+  conversationId String
+  conversation   SmsConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  direction     String // "INBOUND" | "OUTBOUND"
+  senderType    String  @default("agent") // "agent" | "bot" | "contact"
+  senderName    String?
+  fromPhone     String
+  toPhone       String
+  bodyText      String  @db.Text
+  segmentsCount Int     @default(1)
+
+  status        String  @default("SENT") // "PENDING" | "SENT" | "DELIVERED" | "FAILED"
+  provider      String? // "TWILIO" | "AWS_SNS" | "SINCH" | "GUPSHUP" | "SIMULATOR"
+  providerMsgId String? @unique
+
+  isAiGenerated Boolean @default(false)
+
+  sentAt        DateTime?
+  deliveredAt   DateTime?
+  failedAt      DateTime?
+  failureReason String?
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId])
+  @@index([direction])
+  @@index([status])
+  @@index([providerMsgId])
+  @@index([createdAt])
+  @@map("sms_message")
+}
+
+model SmsAiConfig {
+  id                  String   @id @default(uuid())
+  provider            String   @default("groq") // "groq" | "openai"
+  model               String   @default("openai/gpt-oss-120b")
+  apiKey              String? // AES-256 encrypted
+  systemPrompt        String?  @db.Text
+  isActive            Boolean  @default(true)
+  autoReplyEnabled    Boolean  @default(false)
+  autoReplyMaxPerLead Int      @default(3)
+  maxCharacters       Int      @default(160)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("sms_ai_config")
+}
+
+// ─────────────────────────────────────────────
+// 16. DOMAIN 12 EXTENSION: VOICE & AI AGENTS
+// ─────────────────────────────────────────────
+
+enum VoiceTelephonyType {
+  TWILIO
+  VOBIZ
+  EXOTEL
+  TELNYX
+  AMAZON_CONNECT
+}
+
+enum VoiceAgentPlatform {
+  VAPI
+  RETELL
+  ELEVENLABS
+  SARVAM
+  BOLNA
+  PIPECAT
+  LIVEKIT
+  OPENAI_REALTIME
+}
+
+model VoiceTelephonyIntegration {
+  id        String             @id @default(uuid())
+  provider  VoiceTelephonyType
+  name      String
+  isActive  Boolean            @default(true)
+  isDefault Boolean            @default(false)
+
+  // Encrypted Credentials & SIP Details
+  accountSid  String?
+  authToken   String?
+  apiKey      String?
+  apiToken    String?
+  subdomain   String? // e.g. api.in.exotel.com for Exotel
+  sipDomain   String? // e.g. resyl.pstn.twilio.com
+  fromNumbers String[] // Array of available caller ID numbers / DIDs
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaigns VoiceCampaign[]
+
+  @@index([provider])
+  @@index([isActive])
+  @@map("voice_telephony_integration")
+}
+
+model VoiceAgentIntegration {
+  id        String             @id @default(uuid())
+  platform  VoiceAgentPlatform
+  name      String
+  isActive  Boolean            @default(true)
+  isDefault Boolean            @default(false)
+
+  // Encrypted Credentials & Endpoints
+  apiKey    String
+  orgId     String?
+  serverUrl String? // For custom LiveKit / Pipecat / Bolna servers
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaigns VoiceCampaign[]
+
+  @@index([platform])
+  @@index([isActive])
+  @@map("voice_agent_integration")
+}
+
+model VoiceCampaign {
+  id             String             @id @default(uuid())
+  title          String
+  channel        MarketingChannel   @default(VOICE_CALL)
+  status         CampaignStatus     @default(DRAFT)
+  audienceSource AudienceSourceType @default(CRM_DATABASE)
+
+  // Scope: Brokerage vs Channel Partner
+  isCpCampaign Boolean  @default(false)
+  projectId    String?
+  project      Project? @relation(fields: [projectId], references: [id])
+
+  telephonyId    String?
+  telephony      VoiceTelephonyIntegration? @relation(fields: [telephonyId], references: [id])
+  callerIdNumber String?
+
+  agentPlatformId  String?
+  agentIntegration VoiceAgentIntegration? @relation(fields: [agentPlatformId], references: [id])
+
+  // AI & Voice Persona Configuration
+  llmModel      String  @default("gpt-4o-mini")
+  voiceProvider String  @default("11labs")
+  voiceId       String  @default("21m00Tcm4TlvDq8ikWAM")
+  voiceName     String  @default("Rachel")
+  scriptPrompt  String  @db.Text
+  firstMessage  String? @db.Text
+
+  // Execution & Calling Window Rules
+  maxConcurrentCalls Int     @default(5)
+  retryLimit         Int     @default(1)
+  callingWindowStart String? // "10:00"
+  callingWindowEnd   String? // "19:00"
+
+  audienceFilters Json?
+
+  // Aggregate Performance Metrics
+  totalRecipients  Int @default(0)
+  completedCalls   Int @default(0)
+  busyCalls        Int @default(0)
+  noAnswerCalls    Int @default(0)
+  failedCalls      Int @default(0)
+  totalDurationSec Int @default(0)
+
+  // Studio Settings & Fine-tuned Parameters (Vapi, Retell, Sarvam, Bolna)
+  studioSettings Json?
+
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  createdById String?
+  createdBy   User?   @relation("VoiceCampaignCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipients VoiceRecipient[]
+  callLogs   VoiceCallLog[]
+
+  @@index([status])
+  @@index([channel])
+  @@index([projectId])
+  @@index([telephonyId])
+  @@index([agentPlatformId])
+  @@index([createdAt])
+  @@map("voice_campaign")
+}
+
+model VoiceRecipient {
+  id         String        @id @default(uuid())
+  campaignId String
+  campaign   VoiceCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  leadId String?
+  lead   Lead?   @relation(fields: [leadId], references: [id])
+
+  phone          String
+  name           String?
+  status         RecipientDeliveryStatus @default(QUEUED)
+  source         AudienceSourceType      @default(CRM_DATABASE)
+  providerCallId String?
+
+  callDurationSec Int     @default(0)
+  disposition     String? // "COMPLETED", "BUSY", "NO_ANSWER", "VOICEMAIL", "FAILED"
+  recordingUrl    String?
+  transcript      String? @db.Text
+  summary         String? @db.Text
+  sentiment       String? // "POSITIVE", "NEUTRAL", "NEGATIVE"
+  extractedData   Json?
+
+  sentAt      DateTime?
+  completedAt DateTime?
+  failedAt    DateTime?
+  failReason  String?
+  mergeData   Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([campaignId, status])
+  @@index([phone])
+  @@index([leadId])
+  @@map("voice_recipient")
+}
+
+model VoiceCallLog {
+  id          String        @id @default(uuid())
+  campaignId  String
+  campaign    VoiceCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  recipientId String
+
+  disposition   String
+  durationSec   Int     @default(0)
+  recordingUrl  String?
+  transcript    String? @db.Text
+  summary       String? @db.Text
+  sentiment     String?
+  extractedData Json?
+
+  timestamp DateTime @default(now())
+
+  @@index([campaignId])
+  @@index([recipientId])
+  @@map("voice_call_log")
+}
+
+// ─────────────────────────────────────────────
+// 17. DOMAIN 13: ADS MARKETING & META GRAPH API
+// ─────────────────────────────────────────────
+
+model MetaAdIntegration {
+  id            String    @id @default(uuid())
+  name          String
+  adAccountId   String // e.g. "act_1234567890"
+  accessToken   String    @db.Text
+  appId         String?
+  appSecret     String?
+  pageIds       String[]  @default([])
+  currency      String    @default("INR")
+  timezone      String?
+  accountStatus Int       @default(1)
+  isActive      Boolean   @default(true)
+  isDefault     Boolean   @default(false)
+  lastSyncedAt  DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  campaigns   MetaCampaignCache[]
+  webhookLogs MetaLeadWebhookLog[]
+
+  @@index([adAccountId])
+  @@index([isActive])
+  @@map("meta_ad_integration")
+}
+
+model MetaCampaignCache {
+  id              String            @id // Meta Campaign ID
+  integrationId   String
+  integration     MetaAdIntegration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  name            String
+  objective       String
+  status          String // "ACTIVE", "PAUSED", "ARCHIVED"
+  effectiveStatus String?
+  dailyBudget     Float?
+  lifetimeBudget  Float?
+  spend           Float             @default(0)
+  impressions     Int               @default(0)
+  reach           Int               @default(0)
+  clicks          Int               @default(0)
+  ctr             Float             @default(0)
+  cpc             Float             @default(0)
+  cpm             Float             @default(0)
+  leadsCount      Int               @default(0)
+  costPerLead     Float             @default(0)
+  startTime       DateTime?
+  stopTime        DateTime?
+  adSetsData      Json? // Cached ad sets with targeting
+  creativesData   Json? // Cached creatives with preview details
+  lastSyncedAt    DateTime          @default(now())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  webhookLogs MetaLeadWebhookLog[]
+
+  @@index([integrationId])
+  @@index([status])
+  @@index([objective])
+  @@map("meta_campaign_cache")
+}
+
+model MetaLeadWebhookLog {
+  id              String             @id @default(uuid())
+  integrationId   String?
+  integration     MetaAdIntegration? @relation(fields: [integrationId], references: [id], onDelete: SetNull)
+  campaignCacheId String?
+  campaignCache   MetaCampaignCache? @relation(fields: [campaignCacheId], references: [id], onDelete: SetNull)
+  leadgenId       String // Meta leadgen_id
+  pageId          String
+  formId          String?
+  adId            String?
+  campaignId      String?
+  leadId          String?
+  lead            Lead?              @relation("MetaLeadLog", fields: [leadId], references: [id], onDelete: SetNull)
+  fieldData       Json?
+  rawPayload      Json?
+  status          String             @default("PROCESSED") // "PROCESSED", "FAILED"
+  errorMessage    String?
+  createdAt       DateTime           @default(now())
+
+  @@index([leadgenId])
+  @@index([campaignId])
+  @@index([pageId])
+  @@map("meta_lead_webhook_log")
+}
+
+// ─────────────────────────────────────────────
+// 18. DOMAIN 14: GOOGLE ADS & GOOGLE ADS API
+// ─────────────────────────────────────────────
+
+model GoogleAdIntegration {
+  id                String    @id @default(uuid())
+  name              String
+  customerId        String // e.g. "123-456-7890" or "1234567890"
+  managerCustomerId String? // Optional MCC CID
+  refreshToken      String    @db.Text
+  currency          String    @default("INR")
+  timezone          String?
+  descriptiveName   String?
+  accountStatus     String    @default("ENABLED") // "ENABLED", "SUSPENDED", "CLOSED"
+  isActive          Boolean   @default(true)
+  isDefault         Boolean   @default(false)
+  lastSyncedAt      DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  campaigns   GoogleCampaignCache[]
+  webhookLogs GoogleLeadWebhookLog[]
+
+  @@index([customerId])
+  @@index([isActive])
+  @@map("google_ad_integration")
+}
+
+model GoogleCampaignCache {
+  id                     String              @id // Google Campaign Resource ID or numeric ID
+  integrationId          String
+  integration            GoogleAdIntegration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  name                   String
+  advertisingChannelType String // "SEARCH", "PERFORMANCE_MAX", "DISPLAY", "VIDEO"
+  status                 String // "ENABLED", "PAUSED", "REMOVED"
+  dailyBudget            Float?
+  spend                  Float               @default(0) // Converted from cost_micros
+  impressions            Int                 @default(0)
+  clicks                 Int                 @default(0)
+  ctr                    Float               @default(0)
+  cpc                    Float               @default(0)
+  conversions            Float               @default(0)
+  costPerConversion      Float               @default(0)
+  adGroupsData           Json? // Cached ad groups and targeting
+  searchKeywordsData     Json? // Cached keywords with match types & Quality Scores (1-10)
+  startTime              DateTime?
+  stopTime               DateTime?
+  lastSyncedAt           DateTime            @default(now())
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+
+  webhookLogs GoogleLeadWebhookLog[]
+
+  @@index([integrationId])
+  @@index([status])
+  @@index([advertisingChannelType])
+  @@map("google_campaign_cache")
+}
+
+model GoogleLeadWebhookLog {
+  id              String               @id @default(uuid())
+  integrationId   String?
+  integration     GoogleAdIntegration? @relation(fields: [integrationId], references: [id], onDelete: SetNull)
+  campaignCacheId String?
+  campaignCache   GoogleCampaignCache? @relation(fields: [campaignCacheId], references: [id], onDelete: SetNull)
+  googleLeadId    String // Google lead form submission ID
+  formId          String?
+  campaignId      String?
+  gclid           String? // Google Click ID
+  leadId          String?
+  lead            Lead?                @relation("GoogleLeadLog", fields: [leadId], references: [id], onDelete: SetNull)
+  fieldData       Json?
+  rawPayload      Json?
+  status          String               @default("PROCESSED") // "PROCESSED", "FAILED"
+  errorMessage    String?
+  createdAt       DateTime             @default(now())
+
+  @@index([googleLeadId])
+  @@index([campaignId])
+  @@index([formId])
+  @@map("google_lead_webhook_log")
+}

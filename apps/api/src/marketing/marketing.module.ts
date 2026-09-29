@@ -1,0 +1,212 @@
+import { Module } from '@nestjs/common';
+import { PrismaModule } from '../lib/database/prisma.module.js';
+
+// Email Domain
+import { EmailService } from './email/email.service.js';
+import { EmailAudienceService } from './email/services/email-audience.service.js';
+import { EmailAnalyticsService } from './email/services/email-analytics.service.js';
+import { EmailIntegrationsService } from './email/services/email-integrations.service.js';
+import { EmailTrackingService } from './email/services/email-tracking.service.js';
+import { EmailCampaignsController } from './email/controllers/email-campaigns.controller.js';
+import { EmailIntegrationsController } from './email/controllers/email-integrations.controller.js';
+import { EmailTrackingController } from './email/controllers/email-tracking.controller.js';
+import { EmailWebhooksController } from './email/controllers/email-webhooks.controller.js';
+import { EmailInboundController } from './email/controllers/email-inbound.controller.js';
+import { EmailFlowsController } from './email/controllers/email-flows.controller.js';
+import { EmailSettingsToolsController } from './email/controllers/email-settings-tools.controller.js';
+import { EmailInboxController } from './email/controllers/email-inbox.controller.js';
+import { EmailInboundService } from './email/services/email-inbound.service.js';
+import { EmailFlowsService } from './email/services/email-flows.service.js';
+import { EmailInboxService } from './email/services/email-inbox.service.js';
+import { EmailAutomationEngineService } from './email/automations/email-automation-engine.service.js';
+import { EmailAiService } from './email/ai/email-ai.service.js';
+
+// SMS Domain
+import { SmsService } from './sms/sms.service.js';
+import { SmsAudienceService } from './sms/services/sms-audience.service.js';
+import { SmsAnalyticsService } from './sms/services/sms-analytics.service.js';
+import { SmsIntegrationsService } from './sms/services/sms-integrations.service.js';
+import { SmsTrackingService } from './sms/services/sms-tracking.service.js';
+import { SmsCampaignsController } from './sms/controllers/sms-campaigns.controller.js';
+import { SmsIntegrationsController } from './sms/controllers/sms-integrations.controller.js';
+import { SmsTrackingController } from './sms/controllers/sms-tracking.controller.js';
+import { SmsWebhooksController } from './sms/controllers/sms-webhooks.controller.js';
+import { SmsInboundController } from './sms/controllers/sms-inbound.controller.js';
+import { SmsFlowsController } from './sms/controllers/sms-flows.controller.js';
+import { SmsSettingsToolsController } from './sms/controllers/sms-settings-tools.controller.js';
+import { SmsInboxController } from './sms/controllers/sms-inbox.controller.js';
+import { SmsInboundService } from './sms/services/sms-inbound.service.js';
+import { SmsFlowsService } from './sms/services/sms-flows.service.js';
+import { SmsInboxService } from './sms/services/sms-inbox.service.js';
+import { SmsAutomationEngineService } from './sms/automations/sms-automation-engine.service.js';
+import { SmsAiService } from './sms/ai/sms-ai.service.js';
+
+// Voice Domain
+import { VoiceService } from './voice/voice.service.js';
+import { VoiceAudienceService } from './voice/services/voice-audience.service.js';
+import { VoiceAnalyticsService } from './voice/services/voice-analytics.service.js';
+import { VoiceIntegrationsService } from './voice/services/voice-integrations.service.js';
+import { VoiceAudioService } from './voice/services/voice-audio.service.js';
+import { VoiceTrackingService } from './voice/services/voice-tracking.service.js';
+import { VoiceCampaignService } from './voice/services/voice-campaign.service.js';
+import { VoiceDispatcherService } from './voice/services/voice-dispatcher.service.js';
+import { VoiceMediaStreamGateway } from './voice/gateway/voice-media-stream.gateway.js';
+import { VoiceCampaignsController } from './voice/controllers/voice-campaigns.controller.js';
+import { VoiceIntegrationsController } from './voice/controllers/voice-integrations.controller.js';
+import { VoiceAudioController } from './voice/controllers/voice-audio.controller.js';
+import { VoiceTestController } from './voice/controllers/voice-test.controller.js';
+import { VoiceWebhooksController } from './voice/controllers/voice-webhooks.controller.js';
+
+// Meta & Instagram Ads Domain
+import { MetaAdsController } from './ads/meta/controllers/meta-ads.controller.js';
+import { MetaWebhooksController } from './ads/meta/controllers/meta-webhooks.controller.js';
+import { MetaAdsService } from './ads/meta/services/meta-ads.service.js';
+import { MetaSyncService } from './ads/meta/services/meta-sync.service.js';
+import { MetaLeadsService } from './ads/meta/services/meta-leads.service.js';
+import { InstagramAdsController } from './ads/instagram/controllers/instagram-ads.controller.js';
+import { InstagramAdsService } from './ads/instagram/services/instagram-ads.service.js';
+
+// Google & YouTube Ads
+import { GoogleAdsController } from './ads/google/controllers/google-ads.controller.js';
+import { GoogleWebhooksController } from './ads/google/controllers/google-webhooks.controller.js';
+import { GoogleAdsService } from './ads/google/services/google-ads.service.js';
+import { GoogleSyncService } from './ads/google/services/google-sync.service.js';
+import { GoogleLeadsService } from './ads/google/services/google-leads.service.js';
+import { YouTubeAdsController } from './ads/youtube/controllers/youtube-ads.controller.js';
+import { YouTubeAdsService } from './ads/youtube/services/youtube-ads.service.js';
+
+// Shared
+import { SampleCsvController } from './shared/sample-csv.controller.js';
+
+// WhatsApp Marketing & CRM
+import { WhatsAppModule } from './whatsapp/whatsapp.module.js';
+
+@Module({
+  imports: [PrismaModule, WhatsAppModule],
+  controllers: [
+    // Email Controllers
+    EmailCampaignsController,
+    EmailIntegrationsController,
+    EmailTrackingController,
+    EmailWebhooksController,
+    EmailInboundController,
+    EmailFlowsController,
+    EmailSettingsToolsController,
+    EmailInboxController,
+
+    // SMS Controllers
+    SmsCampaignsController,
+    SmsIntegrationsController,
+    SmsTrackingController,
+    SmsWebhooksController,
+    SmsInboundController,
+    SmsFlowsController,
+    SmsSettingsToolsController,
+    SmsInboxController,
+
+    // Voice Controllers
+    VoiceCampaignsController,
+    VoiceIntegrationsController,
+    VoiceAudioController,
+    VoiceTestController,
+    VoiceWebhooksController,
+
+    // Meta & Instagram Ads Controllers
+    MetaAdsController,
+    MetaWebhooksController,
+    InstagramAdsController,
+
+    // Google & YouTube Ads Controllers
+    GoogleAdsController,
+    GoogleWebhooksController,
+    YouTubeAdsController,
+
+    // Shared Controllers
+    SampleCsvController,
+  ],
+  providers: [
+    // Email Services
+    EmailAudienceService,
+    EmailAnalyticsService,
+    EmailIntegrationsService,
+    EmailTrackingService,
+    EmailService,
+    EmailInboundService,
+    EmailFlowsService,
+    EmailInboxService,
+    EmailAutomationEngineService,
+    EmailAiService,
+
+    // SMS Services
+    SmsAudienceService,
+    SmsAnalyticsService,
+    SmsIntegrationsService,
+    SmsTrackingService,
+    SmsService,
+    SmsInboundService,
+    SmsFlowsService,
+    SmsInboxService,
+    SmsAutomationEngineService,
+    SmsAiService,
+
+    // Voice Services
+    VoiceAudienceService,
+    VoiceAnalyticsService,
+    VoiceIntegrationsService,
+    VoiceAudioService,
+    VoiceTrackingService,
+    VoiceCampaignService,
+    VoiceDispatcherService,
+    VoiceMediaStreamGateway,
+    VoiceService,
+
+    // Meta & Instagram Ads Services
+    MetaAdsService,
+    MetaSyncService,
+    MetaLeadsService,
+    InstagramAdsService,
+
+    // Google & YouTube Ads Services
+    GoogleAdsService,
+    GoogleSyncService,
+    GoogleLeadsService,
+    YouTubeAdsService,
+  ],
+  exports: [
+    EmailService,
+    EmailAudienceService,
+    EmailAnalyticsService,
+    EmailIntegrationsService,
+    EmailTrackingService,
+    EmailInboxService,
+
+    SmsService,
+    SmsAudienceService,
+    SmsAnalyticsService,
+    SmsIntegrationsService,
+    SmsTrackingService,
+    SmsInboxService,
+    SmsFlowsService,
+
+    VoiceService,
+    VoiceAudienceService,
+    VoiceAnalyticsService,
+    VoiceIntegrationsService,
+    VoiceAudioService,
+    VoiceTrackingService,
+    VoiceCampaignService,
+    VoiceDispatcherService,
+    VoiceMediaStreamGateway,
+
+    MetaAdsService,
+    MetaSyncService,
+    MetaLeadsService,
+    InstagramAdsService,
+
+    GoogleAdsService,
+    GoogleSyncService,
+    GoogleLeadsService,
+    YouTubeAdsService,
+  ],
+})
+export class MarketingModule { }

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "strict": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "..",
+    "paths": {
+      "@resyl/prisma": ["packages/prisma/src/index.ts"],
+      "@resyl/constants": ["packages/constants/src/index.ts"],
+      "@resyl/types": ["packages/types/src/index.ts"],
+      "@resyl/int-*": ["integrations/*/src/index.ts"]
+    }
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}

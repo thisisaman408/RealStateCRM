@@ -1,0 +1,50 @@
+{
+  "name": "resyl",
+  "private": true,
+  "packageManager": "pnpm@10.28.2",
+  "scripts": {
+    "dev": "turbo run dev start:dev --parallel",
+    "dev:api": "pnpm --filter @resyl/api start:dev",
+    "dev:web": "pnpm --filter @resyl/web dev",
+    "dev:workers": "pnpm --filter @resyl/workers start:dev",
+    "dev:mobile": "pnpm --filter @resyl/mobile start",
+    "db:generate": "pnpm --filter @resyl/prisma db:generate",
+    "db:migrate": "pnpm --filter @resyl/prisma db:migrate",
+    "db:seed": "pnpm --filter @resyl/prisma db:seed",
+    "script": "tsx",
+    "run:script": "tsx scripts/runner.ts",
+    "build": "turbo run build",
+    "build:packages": "pnpm --filter @resyl/types build && pnpm --filter @resyl/constants build && pnpm --filter \"@resyl/int-*\" run build",
+    "postinstall": "pnpm db:generate && pnpm build:packages",
+    "test": "turbo run test",
+    "test:packages": "vitest run packages integrations",
+    "test:api:e2e": "vitest run apps/api/test/e2e",
+    "test:workers:e2e": "vitest run apps/workers/test/e2e",
+    "test:all:e2e": "vitest run packages integrations apps/api/test/e2e apps/workers/test/e2e",
+    "test:web:e2e": "playwright test --config=apps/web/playwright.config.ts",
+    "test:mobile:e2e": "tsx scripts/test-mobile-e2e.ts",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\" --ignore-path .gitignore"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.5",
+    "tsx": "^4.19.3",
+    "turbo": "^2.5.4",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "19.1.0",
+      "react-dom": "19.1.0"
+    },
+    "onlyBuiltDependencies": [
+      "@prisma/engines",
+      "bcrypt",
+      "esbuild",
+      "prisma",
+      "protobufjs",
+      "sharp"
+    ]
+  }
+}

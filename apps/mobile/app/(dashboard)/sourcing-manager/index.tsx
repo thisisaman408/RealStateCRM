@@ -1,0 +1,189 @@
+import { View, Text, ActivityIndicator, ScrollView, Switch } from 'react-native';
+import { Feather, FontAwesome5 } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import { authClient } from '../../../lib/auth-client';
+import { useLocationTracking } from '../../../hooks/useLocationTracking';
+import LiveTrackingMap from '../../../components/maps/LiveTrackingMap';
+import { SharedWidgetsGrid } from '../../../components/shared/SharedWidgetsGrid';
+import { SharedLeaderboard } from '../../../components/shared/SharedLeaderboard';
+import { UserCheck, UserPlus, Calendar, Clock, Briefcase, Building, IndianRupee, TrendingUp, Award } from 'lucide-react-native';
+
+export default function SourcingManagerScreen() {
+  const { data: session } = authClient.useSession();
+  const userId = session?.user?.id || '';
+  const { isTracking, toggleTracking, errorMsg } = useLocationTracking(userId);
+
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+    const timer = setTimeout(() => {
+      async function fetchData() {
+        try {
+          const baseURL = process.env.EXPO_PUBLIC_API_URL as string;
+          const res = await authClient.$fetch('/api/dashboard/sourcing-manager', { baseURL });
+          if (res.error) throw new Error(res.error.message || "Failed");
+          if (isMounted) setData(res.data);
+        } catch (err: any) {
+          if (isMounted) setError(err?.response?.status === 403 ? "Access Denied (403)" : "Connection Error");
+        } finally {
+          if (isMounted) setLoading(false);
+        }
+      }
+      fetchData();
+    }, 100);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-[#f8fafc]">
+        <ActivityIndicator size="large" color="#4f46e5" />
+      </View>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <View className="flex-1 items-center justify-center bg-[#f8fafc] p-6">
+        <View className="bg-red-50 p-6 rounded-3xl border border-red-200 items-center w-full">
+          <Feather name="alert-circle" size={32} color="#dc2626" />
+          <Text className="text-red-600 font-bold text-lg mt-2">Failed to load Dashboard</Text>
+          <Text className="text-red-500 text-center mt-1">{error}</Text>
+        </View>
+      </View>
+    );
+  }
+
+  const {
+    activeBrokers,
+    newBrokers,
+    todayMeetings,
+    todayFollowUps,
+    revenueStats,
+    todayFollowUpList,
+    todayMeetingList,
+    topPerformingBrokers
+  } = data;
+
+  return (
+    <ScrollView className="flex-1 bg-[#f8fafc]" contentContainerStyle={{ padding: 20, paddingBottom: 100 }}>
+      <View className="mb-8">
+        <Text className="text-3xl font-extrabold text-slate-900 tracking-tight">Overview</Text>
+        <Text className="text-slate-500 text-sm font-medium mt-1">Track your performance & revenue</Text>
+      </View>
+
+      {/* Grid for Activities */}
+      <SharedWidgetsGrid widgets={[
+        { label: 'Active Brokers', value: activeBrokers, icon: UserCheck, accent: 'emerald' },
+        { label: 'New Brokers', value: newBrokers, icon: UserPlus, accent: 'blue' },
+        { label: 'Meetings Today', value: todayMeetings, icon: Calendar, accent: 'purple' },
+        { label: 'Follow-ups Today', value: todayFollowUps, icon: Clock, accent: 'orange' },
+      ]} />
+
+      <SharedWidgetsGrid title="Revenue & Performance" widgets={[
+        { label: 'Bookings Gen.', value: revenueStats.bookingsGenerated || 0, icon: Briefcase, accent: 'indigo' },
+        { label: 'Booking Rev.', value: '₹' + (revenueStats.bookingRevenueGenerated || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 }), icon: Building, accent: 'emerald' },
+        { label: 'Commission Paid', value: '₹' + (revenueStats.brokerCommissionPaid || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 }), icon: IndianRupee, accent: 'blue' },
+        { label: 'Handover Rev.', value: '₹' + (revenueStats.brokerRevenueGenerated || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 }), icon: TrendingUp, accent: 'indigo' },
+      ]} />
+
+      {/* Today's Tasks */}
+      <View className="mt-8 mb-4">
+        <Text className="text-xl font-bold text-slate-900 mb-4 px-1">Today's Tasks</Text>
+
+        {(!todayMeetingList?.length && !todayFollowUpList?.length) ? (
+          <View className="bg-white rounded-2xl p-6 border border-slate-200 items-center justify-center">
+            <Feather name="check-circle" size={32} color="#cbd5e1" />
+            <Text className="text-slate-500 font-medium mt-3">No tasks for today. You're all caught up!</Text>
+          </View>
+        ) : (
+          <View className="space-y-4">
+            {todayMeetingList?.map((meeting: any) => (
+              <View key={meeting.id} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex-row items-center mt-3">
+                <View className="w-10 h-10 bg-purple-100 rounded-xl items-center justify-center mr-4">
+                  <Feather name="calendar" size={20} color="#9333ea" />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-slate-900 font-bold">{meeting.title || 'Meeting'}</Text>
+                  <Text className="text-slate-500 text-xs mt-0.5">
+                    {new Date(meeting.scheduledAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} • Broker: {meeting.broker?.name || 'Unknown'}
+                  </Text>
+                </View>
+              </View>
+            ))}
+
+            {todayFollowUpList?.map((followUp: any) => (
+              <View key={followUp.id} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex-row items-center mt-3">
+                <View className="w-10 h-10 bg-orange-100 rounded-xl items-center justify-center mr-4">
+                  <Feather name="clock" size={20} color="#f97316" />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-slate-900 font-bold">{followUp.title || 'Follow-up'}</Text>
+                  <Text className="text-slate-500 text-xs mt-0.5">
+                    {new Date(followUp.scheduledAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} • Broker: {followUp.broker?.name || 'Unknown'}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
+
+      {/* Broker Leaderboard */}
+      <SharedLeaderboard
+        title="Team Performance"
+        icon={<Award size={20} className="text-amber-500" />}
+        data={topPerformingBrokers || []}
+        columns={[
+          { key: 'unitsSold', label: 'Units', width: 'w-12', align: 'right' },
+          { key: 'bookingsGenerated', label: 'Bookings', width: 'w-16', align: 'right' },
+          { key: 'score', label: 'Score', width: 'w-12', align: 'right', isPrimary: true },
+        ]}
+      />
+
+      {/* Live Location Tracking */}
+      <View className="bg-white rounded-3xl p-5 shadow-sm shadow-slate-200 border border-slate-100 mb-4 mt-4">
+        <View className="flex-row items-center justify-between mb-4">
+          <View className="flex-row items-center gap-3">
+            <View className="w-10 h-10 bg-blue-50 rounded-xl items-center justify-center">
+              <Feather name="map-pin" size={18} color="#2563eb" />
+            </View>
+            <View>
+              <Text className="text-base font-bold text-slate-900">Live Location Tracking</Text>
+              <Text className="text-xs text-slate-500">Share location with managers</Text>
+            </View>
+          </View>
+          <Switch
+            value={isTracking}
+            onValueChange={toggleTracking}
+            trackColor={{ false: '#cbd5e1', true: '#93c5fd' }}
+            thumbColor={isTracking ? '#2563eb' : '#f8fafc'}
+          />
+        </View>
+
+        {errorMsg ? (
+          <Text className="text-red-500 text-xs mb-3">{errorMsg}</Text>
+        ) : (
+          <View className="flex-row items-center bg-slate-50 p-3 rounded-xl mb-4">
+            <View className={`w-2 h-2 rounded-full mr-2 ${isTracking ? 'bg-emerald-500' : 'bg-slate-300'}`} />
+            <Text className="text-slate-600 text-xs font-medium">
+              {isTracking ? 'Active & sharing location' : 'Tracking paused'}
+            </Text>
+          </View>
+        )}
+
+        <View className="rounded-2xl overflow-hidden border border-slate-100">
+          <LiveTrackingMap />
+        </View>
+      </View>
+
+    </ScrollView>
+  );
+}

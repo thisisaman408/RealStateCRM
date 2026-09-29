@@ -1,0 +1,63 @@
+# Git
+.git
+.github
+
+# Dependencies
+node_modules
+apps/*/node_modules
+packages/*/node_modules
+integrations/**/node_modules
+apps/workers/node_modules
+
+# Mobile App (Native Android Gradle artifacts & caches — 1.8GB+, never in Docker)
+apps/mobile
+
+# Docs, Agents, Scripts & Metadata
+docs
+.agents
+scripts 
+*.md
+LICENSE
+
+# Next.js / Build Outputs
+.next
+apps/web/.next
+dist
+build
+out
+apps/*/dist
+packages/*/dist
+integrations/**/dist
+
+# Environment Variables
+.env
+.env.*
+apps/*/.env
+apps/*/.env.*
+packages/*/.env
+packages/*/.env.*
+integrations/**/.env
+integrations/**/.env.*
+!.env.example
+!apps/*/.env.example
+!packages/*/.env.example
+!integrations/**/.env.example
+
+# Turborepo
+.turbo
+
+# Vercel / Cloud
+.vercel
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS metadata
+.DS_Store
+Thumbs.db
