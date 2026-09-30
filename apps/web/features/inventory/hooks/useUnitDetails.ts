@@ -64,7 +64,7 @@ export function useUnitDetails(
   const handleSave = async () => {
     try {
       setIsSaving(true);
-      await onSave(unit.id, formData);
+      await onSave(unit?.id || unit?.unitNumber, formData);
       setIsEditing(false);
     } catch (e: any) {
       console.error(e);
