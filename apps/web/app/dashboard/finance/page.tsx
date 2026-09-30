@@ -16,8 +16,9 @@ export default function FinanceDashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await authClient.$fetch('/dashboard/finance', {
-
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "/api/proxy";
+        const res = await authClient.$fetch('/api/dashboard/finance', {
+          baseURL: baseUrl
         });
         setData(res);
         setStatus("success");

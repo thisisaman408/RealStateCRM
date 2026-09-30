@@ -16,8 +16,9 @@ export default function SalesDashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await authClient.$fetch('/dashboard/sales', {
-          
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "/api/proxy";
+        const res = await authClient.$fetch('/api/dashboard/sales', {
+          baseURL: baseUrl
         });
         setData(res);
         setStatus("success");
