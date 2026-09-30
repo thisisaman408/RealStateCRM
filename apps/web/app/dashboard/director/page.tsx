@@ -38,31 +38,40 @@ export default function DirectorDashboard() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages, isTyping]);
 
-  const handleSendChat = (e: React.FormEvent) => {
+  const handleSendChat = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
 
     const newMsg = { id: Date.now(), sender: 'client', text: chatInput, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
-    setChatMessages(prev => [...prev, newMsg]);
+    const updatedMessages = [...chatMessages, newMsg];
+    setChatMessages(updatedMessages);
     setChatInput("");
     setIsTyping(true);
 
-    // Fake AI Response delay
-    setTimeout(() => {
-      let aiReply = "I have noted that down! Let me connect you with a senior broker right away to assist you further.";
-      const lowerInput = newMsg.text.toLowerCase();
+    try {
+      const res = await fetch('/api/groq-demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: updatedMessages })
+      });
+      const data = await res.json();
       
-      if (lowerInput.includes('4bhk')) {
-        aiReply = "Yes! Our premium 4BHK sky-villas start at ₹3.5 Cr. Would you like me to share the floor plan?";
-      } else if (lowerInput.includes('location') || lowerInput.includes('where')) {
-        aiReply = "We are located at Plot 42, Palm Beach Road. It's just 5 mins from the upcoming metro station! 🚇";
-      } else if (lowerInput.includes('discount') || lowerInput.includes('offer')) {
-        aiReply = "We currently have a special spot-booking offer where GST is waived off! Should I book a site visit so you can claim this?";
-      }
-
-      setChatMessages(prev => [...prev, { id: Date.now() + 1, sender: 'ai', text: aiReply, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+      setChatMessages(prev => [...prev, { 
+        id: Date.now() + 1, 
+        sender: 'ai', 
+        text: data.reply, 
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+      }]);
+    } catch (err) {
+      setChatMessages(prev => [...prev, { 
+        id: Date.now() + 1, 
+        sender: 'ai', 
+        text: "Sorry, I am offline right now.", 
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+      }]);
+    } finally {
       setIsTyping(false);
-    }, 2000);
+    }
   };
 
   return (
