@@ -66,9 +66,9 @@ export function useUnitDetails(
       setIsSaving(true);
       await onSave(unit.id, formData);
       setIsEditing(false);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      toast.error('Failed to save unit details');
+      toast.error(e.message || 'Failed to save unit details');
     } finally {
       setIsSaving(false);
     }

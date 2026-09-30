@@ -111,7 +111,12 @@ export function SharedProjectInventoryPage({
         }),
       }
     );
-    if (!res.ok) throw new Error("Failed to update unit");
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      console.error("Backend Error Response:", errData);
+      const errMsg = Array.isArray(errData.message) ? errData.message.join(", ") : (errData.message || "Failed to update unit");
+      throw new Error(errMsg);
+    }
     await loadTowers();
     setSelectedUnit(null);
   };
