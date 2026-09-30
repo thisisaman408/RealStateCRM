@@ -26,38 +26,31 @@ export class GenerateTowerPromptDto {
 }
 
 export class TowerUnitDto {
-  @IsString()
-  unitNumber: string;
+  @IsOptional()
+  unitNumber?: any;
 
   @IsOptional()
-  @IsEnum(UnitTypeEnum)
   type?: any; // The service handles validation with fallback
 
   @IsOptional()
-  @IsNumber()
-  basePrice?: number;
+  basePrice?: any;
 
   @IsOptional()
-  @IsNumber()
-  commissionPercentage?: number;
+  commissionPercentage?: any;
 
   @IsOptional()
-  @IsNumber()
-  carpetArea?: number;
+  carpetArea?: any;
 
   @IsOptional()
-  @IsString()
-  facing?: string;
+  facing?: any;
 }
 
 export class TowerFloorDto {
   @IsOptional()
-  @IsString()
   floorNumber?: any;
 
   @IsOptional()
-  @IsString()
-  name?: string;
+  name?: any;
 
   @IsArray()
   @ValidateNested({ each: true })
