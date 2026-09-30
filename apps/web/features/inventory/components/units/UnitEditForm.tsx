@@ -38,6 +38,29 @@ export function UnitEditForm({
 
       <div>
         <label className="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] mb-1">
+          Unit Type
+        </label>
+        <select
+          className="w-full h-9 px-3 bg-slate-50 focus:bg-white border border-slate-200 rounded-xl text-base sm:text-xs font-semibold text-[var(--text-primary)] outline-none focus:border-[var(--brand-600)] focus:ring-2 focus:ring-purple-500/15 cursor-pointer transition-all"
+          value={formData.type || "TWO_BHK"}
+          onChange={(e) =>
+            setFormData({ ...formData, type: e.target.value })
+          }
+        >
+          <option value="STUDIO">STUDIO</option>
+          <option value="ONE_BHK">1 BHK</option>
+          <option value="TWO_BHK">2 BHK</option>
+          <option value="THREE_BHK">3 BHK</option>
+          <option value="FOUR_BHK">4 BHK</option>
+          <option value="PENTHOUSE">PENTHOUSE</option>
+          <option value="VILLA">VILLA</option>
+          <option value="SHOP">SHOP</option>
+          <option value="OFFICE">OFFICE</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] mb-1">
           Base Price (₹)
         </label>
         <input
