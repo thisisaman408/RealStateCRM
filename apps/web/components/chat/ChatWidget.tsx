@@ -52,7 +52,7 @@ export function ChatWidget() {
         ?.split("=")[1];
     }
 
-    const SOCKET_URL = "http://localhost:3333";
+    const SOCKET_URL = API_URL;
 
     const newSocket = io(SOCKET_URL, {
       query: { userId },
