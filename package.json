@@ -15,7 +15,7 @@
     "run:script": "tsx scripts/runner.ts",
     "build": "turbo run build",
     "build:packages": "pnpm --filter @resyl/types build && pnpm --filter @resyl/constants build && pnpm --filter \"@resyl/int-*\" run build",
-    "postinstall": "pnpm db:generate && pnpm build:packages",
+    "postinstall": "pnpm build:packages",
     "test": "turbo run test",
     "test:packages": "vitest run packages integrations",
     "test:api:e2e": "vitest run apps/api/test/e2e",
