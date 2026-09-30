@@ -38,7 +38,7 @@ export default function LoginPage() {
     async function fetchRoles() {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333"}/roles`
+          `${process.env.NEXT_PUBLIC_API_URL || "/api/proxy"}/roles`
         );
         const data = await res.json();
         if (Array.isArray(data)) {
