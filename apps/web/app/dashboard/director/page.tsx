@@ -4,9 +4,9 @@ import { authClient } from "@/lib/auth-client";
 import { 
   BarChart, CheckCircle2, MessageCircle, PhoneMissed, 
   Play, Bot, User, Sparkles, Clock, Calendar, 
-  Activity, Share2, Camera, PhoneCall, ArrowRight, AudioLines
+  Activity, Share2, Camera, PhoneCall, ArrowRight, AudioLines, Send
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function DirectorDashboard() {
   const { data: session } = authClient.useSession();
@@ -16,6 +16,16 @@ export default function DirectorDashboard() {
 
   // Fake State for Interactive Demo
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const [chatInput, setChatInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const [chatMessages, setChatMessages] = useState([
+    { id: 1, sender: 'ai', text: 'Hi Rahul! 👋 Thank you for your interest in Godrej Splendour via Facebook. Are you looking for a 2BHK or 3BHK?', time: '11:30 PM' },
+    { id: 2, sender: 'client', text: '3BHK, what is the price?', time: '11:35 PM' },
+    { id: 3, sender: 'ai', text: 'Our 3BHKs start at ₹1.2 Cr. I can schedule a site visit for you tomorrow or send the digital brochure right now. What do you prefer? 🏢', time: '11:35 PM' },
+    { id: 4, sender: 'client', text: 'Send brochure, will visit on Sunday.', time: '11:40 PM' }
+  ]);
 
   const mockLeads = [
     { id: 1, name: "Rahul Verma", source: "Facebook Ads", icon: Share2, color: "text-blue-600 bg-blue-50", intent: "High", status: "Site Visit Scheduled", time: "10 mins ago", aiAction: "Qualified by AI" },
@@ -23,6 +33,37 @@ export default function DirectorDashboard() {
     { id: 3, name: "Amit Sharma", source: "Missed Call", icon: PhoneMissed, color: "text-red-500 bg-red-50", intent: "High", status: "Call Back Required", time: "1 hour ago", aiAction: "AI Receptionist Answered" },
     { id: 4, name: "Neha Gupta", source: "Instagram", icon: Camera, color: "text-pink-600 bg-pink-50", intent: "Low", status: "Nurturing", time: "2 hours ago", aiAction: "Added to Drip Campaign" },
   ];
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, isTyping]);
+
+  const handleSendChat = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const newMsg = { id: Date.now(), sender: 'client', text: chatInput, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+    setChatMessages(prev => [...prev, newMsg]);
+    setChatInput("");
+    setIsTyping(true);
+
+    // Fake AI Response delay
+    setTimeout(() => {
+      let aiReply = "I have noted that down! Let me connect you with a senior broker right away to assist you further.";
+      const lowerInput = newMsg.text.toLowerCase();
+      
+      if (lowerInput.includes('4bhk')) {
+        aiReply = "Yes! Our premium 4BHK sky-villas start at ₹3.5 Cr. Would you like me to share the floor plan?";
+      } else if (lowerInput.includes('location') || lowerInput.includes('where')) {
+        aiReply = "We are located at Plot 42, Palm Beach Road. It's just 5 mins from the upcoming metro station! 🚇";
+      } else if (lowerInput.includes('discount') || lowerInput.includes('offer')) {
+        aiReply = "We currently have a special spot-booking offer where GST is waived off! Should I book a site visit so you can claim this?";
+      }
+
+      setChatMessages(prev => [...prev, { id: Date.now() + 1, sender: 'ai', text: aiReply, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+      setIsTyping(false);
+    }, 2000);
+  };
 
   return (
     <div className="max-w-7xl mx-auto pb-12">
@@ -115,7 +156,7 @@ export default function DirectorDashboard() {
                   <PhoneCall className="w-5 h-5 text-red-500" />
                   AI Receptionist Call Logs
                 </h2>
-                <p className="text-sm text-gray-500 mt-1">Calls handled entirely by the AI when brokers were busy.</p>
+                <p className="text-sm text-gray-500 mt-1">Interactive demo of a missed call handled by AI.</p>
               </div>
             </div>
             <div className="p-6">
@@ -137,12 +178,12 @@ export default function DirectorDashboard() {
                     }`}
                   >
                     {playingAudio === '1' ? <AudioLines className="w-4 h-4 animate-pulse" /> : <Play className="w-4 h-4 fill-current" />}
-                    {playingAudio === '1' ? 'Playing...' : 'Play Call'}
+                    {playingAudio === '1' ? 'Playing Fake Audio...' : 'Simulate Call'}
                   </button>
                 </div>
                 
                 {/* Simulated Transcript */}
-                <div className="space-y-4 max-h-[250px] overflow-y-auto pr-2">
+                <div className={`space-y-4 max-h-[250px] overflow-y-auto pr-2 transition-opacity duration-500 ${playingAudio === '1' ? 'opacity-100' : 'opacity-40'}`}>
                   <div className="flex gap-3">
                     <div className="w-8 h-8 rounded-full bg-indigo-100 flex-shrink-0 flex items-center justify-center">
                       <Bot className="w-4 h-4 text-indigo-600" />
@@ -175,73 +216,55 @@ export default function DirectorDashboard() {
 
         {/* Right Column: WhatsApp AI Showcase (1 column width) */}
         <div className="lg:col-span-1">
-          <div className="bg-gradient-to-b from-green-500 to-green-600 rounded-3xl shadow-xl overflow-hidden flex flex-col h-full border border-green-700">
+          <div className="bg-gradient-to-b from-green-500 to-green-600 rounded-3xl shadow-xl overflow-hidden flex flex-col h-[650px] border border-green-700">
             <div className="p-5 flex items-center gap-3 text-white border-b border-green-400/30">
               <MessageCircle className="w-7 h-7 fill-white" />
               <div>
                 <h3 className="font-bold text-lg">WhatsApp AI Agent</h3>
-                <p className="text-green-100 text-xs">Always On • Engaging Leads 24/7</p>
+                <p className="text-green-100 text-xs">Live Interactive Simulator</p>
               </div>
             </div>
             
-            <div className="p-4 bg-[#E5DDD5] flex-1 flex flex-col gap-4 overflow-y-auto" style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')"}}>
+            <div className="p-4 bg-[#E5DDD5] flex-1 flex flex-col gap-4 overflow-y-auto relative" style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')"}}>
               
-              {/* Date stamp */}
               <div className="flex justify-center">
-                <span className="bg-white/90 text-gray-500 text-[11px] px-3 py-1 rounded-lg shadow-sm">Today, 11:30 PM</span>
+                <span className="bg-white/90 text-gray-500 text-[11px] px-3 py-1 rounded-lg shadow-sm">Today</span>
               </div>
 
-              {/* Chat bubbles */}
-              <div className="flex gap-2 items-end justify-start">
-                <div className="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[85%] text-sm text-gray-800 relative">
-                  Hi Rahul! 👋 Thank you for your interest in Godrej Splendour via Facebook. Are you looking for a 2BHK or 3BHK?
-                  <div className="text-[10px] text-gray-400 text-right mt-1">11:30 PM</div>
-                </div>
-              </div>
-
-              <div className="flex gap-2 items-end justify-end">
-                <div className="bg-[#dcf8c6] p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[85%] text-sm text-gray-800 relative">
-                  3BHK, what is the price?
-                  <div className="text-[10px] text-gray-500 text-right mt-1 flex justify-end items-center gap-1">
-                    11:35 PM <span className="text-blue-500">✓✓</span>
+              {chatMessages.map((msg) => (
+                <div key={msg.id} className={`flex gap-2 items-end ${msg.sender === 'client' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`${msg.sender === 'client' ? 'bg-[#dcf8c6] rounded-tr-none' : 'bg-white rounded-tl-none'} p-3 rounded-2xl shadow-sm max-w-[85%] text-sm text-gray-800 relative`}>
+                    {msg.text}
+                    <div className={`text-[10px] text-gray-400 mt-1 flex items-center gap-1 ${msg.sender === 'client' ? 'justify-end text-gray-500' : 'text-right'}`}>
+                      {msg.time} {msg.sender === 'client' && <span className="text-blue-500">✓✓</span>}
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
 
-              <div className="flex gap-2 items-end justify-start">
-                <div className="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[85%] text-sm text-gray-800 relative">
-                  Our 3BHKs start at ₹1.2 Cr. I can schedule a site visit for you tomorrow or send the digital brochure right now. What do you prefer? 🏢
-                  <div className="text-[10px] text-gray-400 text-right mt-1">11:35 PM</div>
-                </div>
-              </div>
-
-              <div className="flex gap-2 items-end justify-end">
-                <div className="bg-[#dcf8c6] p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[85%] text-sm text-gray-800 relative">
-                  Send brochure, will visit on Sunday.
-                  <div className="text-[10px] text-gray-500 text-right mt-1 flex justify-end items-center gap-1">
-                    11:40 PM <span className="text-blue-500">✓✓</span>
+              {isTyping && (
+                <div className="flex gap-2 items-end justify-start">
+                  <div className="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[85%] text-sm text-gray-500 flex items-center gap-1">
+                    <span className="animate-bounce">●</span><span className="animate-bounce delay-100">●</span><span className="animate-bounce delay-200">●</span>
                   </div>
                 </div>
-              </div>
-
-              {/* System message inside chat */}
-              <div className="flex justify-center mt-2">
-                <div className="bg-indigo-900/80 text-white text-[11px] px-4 py-2 rounded-xl shadow-sm border border-indigo-400 flex items-center gap-2">
-                  <Bot className="w-3 h-3" />
-                  AI tagged lead as "WARM" & scheduled visit
-                </div>
-              </div>
-
+              )}
+              
+              <div ref={chatEndRef} />
             </div>
 
-            <div className="bg-gray-100 p-3 border-t border-gray-200 flex gap-2 items-center">
-              <div className="bg-white rounded-full flex-1 px-4 py-2 text-sm text-gray-400 shadow-inner flex items-center">
-                AI is currently monitoring chats...
-              </div>
-              <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-md">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-            </div>
+            <form onSubmit={handleSendChat} className="bg-gray-100 p-3 border-t border-gray-200 flex gap-2 items-center">
+              <input 
+                type="text" 
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Type to test the AI bot..."
+                className="bg-white rounded-full flex-1 px-4 py-3 text-sm text-gray-800 shadow-inner outline-none border border-gray-200 focus:border-green-400"
+              />
+              <button type="submit" disabled={!chatInput.trim() || isTyping} className="w-12 h-12 rounded-full bg-green-500 disabled:bg-gray-300 flex items-center justify-center shadow-md transition-colors cursor-pointer">
+                <Send className="w-5 h-5 text-white ml-1" />
+              </button>
+            </form>
 
           </div>
         </div>
